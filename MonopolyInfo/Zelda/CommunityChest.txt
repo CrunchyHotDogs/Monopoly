@@ -1,0 +1,17 @@
+-* Advance To Go || A || <html>[DESCRIPTION]<br/>[PLAYER_NAME] has advanced to go and collected 200 rupees.</html> *-
+-* Bank Error In Your Favor || B || <html>[DESCRIPTION]<br/>A bank error has occured in your favor! Collect 200 rupees, [PLAYER_NAME].</html> *-
+-* Doctor's Fee || C || <html>[DESCRIPTION]<br/>Oh no! You have to pay a doctor's fee! Pay the doctor 50 rupees, [PLAYER_NAME].</html> *-
+-* From Sale of Stock || D || <html>[DESCRIPTION]<br/>Gain 50 rupees, [PLAYER_NAME].</html> *-
+-* Get Out Of Jail Free Card || E || <html>[DESCRIPTION]<br/>[PLAYER_NAME] has received a get out of jail free card! WOO!</html> *-
+-* Go To Jail || F || <html>[DESCRIPTION]<br/>Woops no jail feature included!</html> *-
+-* Royal Ocarina Performance || G || <html>[DESCRIPTION]<br/>Every player must purchase tickets. Each player must pay [PLAYER_NAME] $50.</html> *-
+-* Holiday Fund Matures || H || <html>[DESCRIPTION]<br/>Holiday fund time, cheers! Receive 100 rupees, [PLAYER_NAME].</html> *-
+-* Hidden Loot Stash || I || <html>[DESCRIPTION]<br/>You find a hidden loot stash. Collect 20 rupees, [PLAYER_NAME].</html> *-
+-* It Is Your Birthday || J || <html>[DESCRIPTION]<br/>Happy birthday, [PLAYER_NAME]! Receive 10 rupees from each player.</html> *-
+-* Find Treasure Chest || K || <html>[DESCRIPTION]<br/>You find a treasure chest! Receive 100 rupees, [PLAYER_NAME].</html> *-
+-* Pay Respawn Fees || L || <html>[DESCRIPTION]<br/>Looks like someone had an accident. Pay 100 rupees, [PLAYER_NAME].</html> *-
+-* Pay Training Fees || M || <html>[DESCRIPTION]<br/>Training is very important. Pay 150 rupees, [PLAYER_NAME].</html> *-
+-* Receives Consultancy Fee || N || <html>[DESCRIPTION]<br/>Receive 25 rupees, [PLAYER_NAME].</html> *-
+-* You Are Assessed For Street Repairs || O || <html>[DESCRIPTION]<br/>Street repair time, [PLAYER_NAME]. 25 rupees per house, 115 rupees per hotel.</html> *-
+-* You Have Won Second Prize In A Horse Race || P || <html>[DESCRIPTION]<br/>Only second place? [PLAYER_NAME] receives 10 rupees for trying.</html> *-
+-* You Inherit Rupees || Q || <html>[DESCRIPTION]<br/>[PLAYER_NAME] inherits 100 rupees.</html> *-

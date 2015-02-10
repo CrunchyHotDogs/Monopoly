@@ -1,0 +1,17 @@
+-* Advance To Go || A || <html>[DESCRIPTION]<br/>[PLAYER_NAME] has advanced to go and collected 200 gold.</html> *-
+-* Bank Error In Your Favor || B || <html>[DESCRIPTION]<br/>A bank error has occured in your favor! Collect 200 gold, [PLAYER_NAME].</html> *-
+-* Healer Aid Fee || C || <html>[DESCRIPTION]<br/>Oh no! You have to pay a healer aid fee! Pay the doctor 50 gold, [PLAYER_NAME].</html> *-
+-* From Sale of Stock || D || <html>[DESCRIPTION]<br/>Gain 50 gold, [PLAYER_NAME].</html> *-
+-* Get Out Of Azkaban Free Card || E || <html>[DESCRIPTION]<br/>[PLAYER_NAME] has received an invisible cloak! WOO!</html> *-
+-* Go To Azkaban || F || <html>[DESCRIPTION]<br/>You have run into a Dementor! Go straight to Azkaban.</html> *-
+-* Grand Wizard Display || G || <html>[DESCRIPTION]<br/>Every player must purchase tickets. Each player must pay [PLAYER_NAME] 50 gold.</html> *-
+-* Defeated A Troll || H || <html>[DESCRIPTION]<br/>You have defeated a troll, cheers! Receive 100 gold, [PLAYER_NAME].</html> *-
+-* Destroyed Tom Riddle's Diary || I || <html>[DESCRIPTION]<br/>Receive 20 gold, [PLAYER_NAME], for your bravery.</html> *-
+-* Quidditch Cup Winner! || J || <html>[DESCRIPTION]<br/>Congratulations, [PLAYER_NAME]! Receive 10 gold from the losers.</html> *-
+-* Life Insurance Matures || K || <html>[DESCRIPTION]<br/>Your life insurance has matured. Receive 100 gold, [PLAYER_NAME].</html> *-
+-* Ran Into Moaning Myrtle || L || <html>[DESCRIPTION]<br/>Looks like someone ran into moaning Myrtle on the second floor. Pay 100 gold, [PLAYER_NAME].</html> *-
+-* Caught Wandering || M || <html>[DESCRIPTION]<br/>You have been caught wandering around Hogwarts at night. Pay 150 gold, [PLAYER_NAME].</html> *-
+-* Successful Exam || N || <html>[DESCRIPTION]<br/>You have received 112% on your charms exam, receive 25 gold, [PLAYER_NAME].</html> *-
+-* You Have A Ghoul In Your House || O || <html>[DESCRIPTION]<br/>You have ghouls in your house, pay to remove them. [PLAYER_NAME] pays 25 gold per house, 115 gold per hotel.</html> *-
+-* You Have Won Second Prize In Wizard's Chess || P || <html>[DESCRIPTION]<br/>Only second place? [PLAYER_NAME] receives 10 gold for trying.</html> *-
+-* You Inherit The House Of Black || Q || <html>[DESCRIPTION]<br/>You inherid The House of Black from Sirius. [PLAYER_NAME] receives 100 gold.</html> *-

@@ -1,0 +1,16 @@
+-* Advance To Go || A || <html>[DESCRIPTION]<br/>[PLAYER_NAME] advances to go and collect 200 cat nip.</html>  *-
+-* Advance To Oriental || B || <html>[DESCRIPTION]<br/>[PLAYER_NAME] goes straight to the Oriental Cat. Receive 200 cat nip if you pass go.</html> *-
+-* Advance To Ocicat || C || <html>[DESCRIPTION]<br/>[PLAYER_NAME] goes straight to the Ocicat. Receive 200 cat nip if you pass go.</html> *-
+-* Advance To Nearest Pest || D || <html>[DESCRIPTION]<br/>[PLAYER_NAME] goes straight to the nearest Pest. You may buy the property if unowned, else pay the owner 10x your roll.</html>  *-
+-* Advance To Nearest Toy || E || <html>[DESCRIPTION]<br/>[PLAYER_NAME] goes straight to the nearest cat toy.</html> *-
+-* Bank Pays You Cat Nip || F || <html>[DESCRIPTION]<br/>[PLAYER_NAME] receives 50 cat nip from the bank.</html> *-
+-* Get Out of Jail Free Card || G || <html>[DESCRIPTION]<br/>[PLAYER_NAME] can now escape from jail.</html>  *-
+-* Go Back 3 Spaces || H || <html>[DESCRIPTION]<br/>[PLAYER_NAME] must move back 3 spaces. Sorry!</html>  *-
+-* Go To Jail || I || <html>[DESCRIPTION]<br/>[PLAYER_NAME] goes directly to jail, no go gold.</html> *-
+-* Give A Bath To Your Property || J || <html>[DESCRIPTION]<br/>[PLAYER_NAME] must pay 25 cat nip per cat house, 100 cat nip for each cat hotel.</html> *-
+-* Pay Cat Owner Tax || K || <html>[DESCRIPTION]<br/>[PLAYER_NAME] must pay 15 cat nip tax.</html> *-
+-* Take A Trip To The Yarn || L || <html>[DESCRIPTION]<br/>[PLAYER_NAME] receives 200 cat nip if they pass go.</html> *-
+-* Take A Trip To The Persian || M || <html>[DESCRIPTION]<br/>[PLAYER_NAME] takes a trip to the Persian cat, better hope this is a nice kitty!</html> *-
+-* You Have Been Litter Box Cleaner Of The Board || N || <html>[DESCRIPTION]<br/>[PLAYER_NAME] pays each player 50 cat nip.</html> *-
+-* Your Cat Loan Matures || P || <html>[DESCRIPTION]<br/>[PLAYER_NAME] receives 150 cat nip.</html> *-
+-* You Have Pleased Your Masters || Q || <html>[DESCRIPTION]<br/>[PLAYER_NAME] receives 100 cat nip.</html> *-

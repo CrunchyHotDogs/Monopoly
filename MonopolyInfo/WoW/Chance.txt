@@ -1,0 +1,16 @@
+-* Advance To Go || A || <html>[DESCRIPTION]<br/>[PLAYER_NAME] has leveled up! Advance to go and collect 200 gold.</html>  *-
+-* Advance To Aerie Peak || B || <html>[DESCRIPTION]<br/>[PLAYER_NAME] goes straight to Aerie Peak. Receive 200 gold if you pass go.</html> *-
+-* Advance To Nighthaven || C || <html>[DESCRIPTION]<br/>[PLAYER_NAME] goes straight to Nighthaven. Receive 200 gold if you pass go.</html> *-
+-* Advance To Nearest Utility || D || <html>[DESCRIPTION]<br/>[PLAYER_NAME] goes straight to the nearest Utility. You may buy the property if unowned, else pay the owner 10x your roll.</html>  *-
+-* Advance To Nearest Dungeon || E || <html>[DESCRIPTION]<br/>[PLAYER_NAME] goes straight to the nearest Dungeon.</html> *-
+-* Bank Pays You Dividend || F || <html>[DESCRIPTION]<br/>[PLAYER_NAME] receives 50 gold from the bank.</html> *-
+-* Get Out of Battleground Free Card || G || <html>[DESCRIPTION]<br/>[PLAYER_NAME] can now escape from a battleground.</html>  *-
+-* Go Back 3 Spaces || H || <html>[DESCRIPTION]<br/>[PLAYER_NAME] must move back 3 spaces. Sorry!</html>  *-
+-* Go To Battleground || I || <html>[DESCRIPTION]<br/>[PLAYER_NAME] goes directly to a battleground, no go gold.</html> *-
+-* Make General Repairs On Your Property || J || <html>[DESCRIPTION]<br/>[PLAYER_NAME] must pay 25 gold per house, 100 gold for each hotel.</html> *-
+-* Pay Peon Tax || K || <html>[DESCRIPTION]<br/>[PLAYER_NAME] must pay 15 gold tax.</html> *-
+-* Take A Trip To Deadmines || L || <html>[DESCRIPTION]<br/>[PLAYER_NAME] receives 200 gold if they pass go.</html> *-
+-* Take A Walk In Darnassus || M || <html>[DESCRIPTION]<br/>[PLAYER_NAME] takes a walk through Darnassus, better hope no one owns the city!</html> *-
+-* You Have Been Elected Chieftain of the Board || N || <html>[DESCRIPTION]<br/>[PLAYER_NAME] pays each player 50 gold.</html> *-
+-* Your Building Loan Matures || P || <html>[DESCRIPTION]<br/>[PLAYER_NAME] receives 150 gold.</html> *-
+-* You Have Completed An Achievement || Q || <html>[DESCRIPTION]<br/>[PLAYER_NAME] receives 100 gold.</html> *-

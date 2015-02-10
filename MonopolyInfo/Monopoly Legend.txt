@@ -1,0 +1,42 @@
+C = Chance
+CC = Community Chest
+FP = Free Parking
+G = Go
+GTJ = Go To Jail
+LT = Luxury Tax
+P = Property
+RR = Railroad
+U = Utility
+
+
+
+
+
+
+PROPERTY NAME || TAX AMOUNT || PURCHASE PRICE || HOUSE COST || PROPERTY TYPE
+
+COMMUNITY CHEST NAME || CARD KEY
+
+
+
+
+
+
+
+-* Advance To Go || ATG *-
+-* Bank Error In Your Favor || BEINYF *-
+-* Doctor's Fee || DF *-
+-* From Sale of Stock || FSOS *-
+-* Get Out Of Jail Free || GOOJF *-
+-* Go To Jail || GTJ *-
+-* Grand Opera Night || GON *-
+-* Holiday Fund Matures || HFM *-
+-* Income Tax Refund || ITR *-
+-* It Is Your Birthday || IIYB *-
+-* Life Insurance Matures || LIM *-
+-* Pay Hospital Fees || PHF *-
+-* Pay School Fees || PSF *-
+-* Receives $25 Consultancy Fee || RCF *-
+-* You Are Assessed For Street Repairs || YAAFSR *-
+-* You Have Won Second Prize In A Beauty Contest || YHWSPIABC *-
+-* You Inherit $100 || YI *-

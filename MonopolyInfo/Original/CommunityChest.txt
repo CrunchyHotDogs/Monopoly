@@ -1,0 +1,17 @@
+-* Advance To Go || A || <html>[DESCRIPTION]<br/>[PLAYER_NAME] has advanced to go and collected $200.</html> *-
+-* Bank Error In Your Favor || B || <html>[DESCRIPTION]<br/>A bank error has occured in your favor! Collect $200, [PLAYER_NAME].</html> *-
+-* Doctor's Fee || C || <html>[DESCRIPTION]<br/>Oh no! You have to pay a doctor's fee! Pay the doctor $50, [PLAYER_NAME].</html> *-
+-* From Sale of Stock || D || <html>[DESCRIPTION]<br/>Gain $50, [PLAYER_NAME].</html> *-
+-* Get Out Of Jail Free Card || E || <html>[DESCRIPTION]<br/>[PLAYER_NAME] has received a get out of jail free card! WOO!</html> *-
+-* Go To Jail || F || <html>[DESCRIPTION]<br/>Head right on over to the jail!</html> *-
+-* Grand Opera Night || G || <html>[DESCRIPTION]<br/>Every player must purchase tickets. Each player must pay [PLAYER_NAME] $50.</html> *-
+-* Holiday Fund Matures || H || <html>[DESCRIPTION]<br/>Holiday fund time, cheers! Receive $100, [PLAYER_NAME].</html> *-
+-* Income Tax Refund || I || <html>[DESCRIPTION]<br/>Income tax refund. Receive $20, [PLAYER_NAME].</html> *-
+-* It Is Your Birthday || J || <html>[DESCRIPTION]<br/>Happy birthday, [PLAYER_NAME]! Receive $10 from each player.</html> *-
+-* Life Insurance Matures || K || <html>[DESCRIPTION]<br/>Your life insurance has matured. Receive $100, [PLAYER_NAME].</html> *-
+-* Pay Hospital Fees || L || <html>[DESCRIPTION]<br/>Looks like someone had an accident. Pay $100, [PLAYER_NAME].</html> *-
+-* Pay School Fees || M || <html>[DESCRIPTION]<br/>Education is very important. Pay $150, [PLAYER_NAME].</html> *-
+-* Receives Consultancy Fee || N || <html>[DESCRIPTION]<br/>Receive $25, [PLAYER_NAME].</html> *-
+-* You Are Assessed For Street Repairs || O || <html>[DESCRIPTION]<br/>Street repair time, [PLAYER_NAME]. $25 per house, $115 per hotel.</html> *-
+-* You Have Won Second Prize In A Beauty Contest || P || <html>[DESCRIPTION]<br/>Only second place? [PLAYER_NAME] receives $10 for trying.</html> *-
+-* You Inherit Money || Q || <html>[DESCRIPTION]<br/>[PLAYER_NAME] inherits $100.</html> *-

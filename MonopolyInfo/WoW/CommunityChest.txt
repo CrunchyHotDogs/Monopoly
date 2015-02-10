@@ -1,0 +1,17 @@
+-* Advance To Go || A || <html>[DESCRIPTION]<br/>[PLAYER_NAME] has advanced to go and collected 200 gold.</html> *-
+-* Bank Error In Your Favor || B || <html>[DESCRIPTION]<br/>A bank error has occured in your favor! Collect 200 gold, [PLAYER_NAME].</html> *-
+-* First Aid Fee || C || <html>[DESCRIPTION]<br/>Oh no! You have to pay a first aid fee! Pay the doctor 50 gold, [PLAYER_NAME].</html> *-
+-* From Sale of Stock || D || <html>[DESCRIPTION]<br/>Gain 50 gold, [PLAYER_NAME].</html> *-
+-* Get Out Of Battleground Free Card || E || <html>[DESCRIPTION]<br/>[PLAYER_NAME] has received a get out of battleground free card! WOO!</html> *-
+-* Go To Battleground || F || <html>[DESCRIPTION]<br/>Head right to the battleground!</html> *-
+-* Grand Raid Night || G || <html>[DESCRIPTION]<br/>Every player must purchase their raid spot. Each player must pay [PLAYER_NAME] 50 gold.</html> *-
+-* Auction House Sale || H || <html>[DESCRIPTION]<br/>Your items on the auction house sold, cheers! Receive 100 gold, [PLAYER_NAME].</html> *-
+-* Income Tax Refund || I || <html>[DESCRIPTION]<br/>Income tax refund. Receive 20 gold, [PLAYER_NAME].</html> *-
+-* You Have Leveled Up! || J || <html>[DESCRIPTION]<br/>Congratulations, [PLAYER_NAME]! Receive 10 gold from each player.</html> *-
+-* Life Insurance Matures || K || <html>[DESCRIPTION]<br/>Your life insurance has matured. Receive 100 gold, [PLAYER_NAME].</html> *-
+-* Pay Healer Fees || L || <html>[DESCRIPTION]<br/>Looks like someone had an accident. Pay 100 gold, [PLAYER_NAME].</html> *-
+-* Pay Trainer Fees || M || <html>[DESCRIPTION]<br/>Training is very important. Pay 150 gold, [PLAYER_NAME].</html> *-
+-* Receives Consultancy Fee || N || <html>[DESCRIPTION]<br/>Receive 25 gold, [PLAYER_NAME].</html> *-
+-* You Are Assessed For Street Repairs || O || <html>[DESCRIPTION]<br/>Street repair time, [PLAYER_NAME]. 25 gold per house, 115 gold per hotel.</html> *-
+-* You Have Won Second Prize In The Arena || P || <html>[DESCRIPTION]<br/>Only second place? [PLAYER_NAME] receives 10 gold for trying.</html> *-
+-* You Inherit Money || Q || <html>[DESCRIPTION]<br/>[PLAYER_NAME] inherits 100 gold.</html> *-
