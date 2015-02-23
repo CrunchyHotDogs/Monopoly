@@ -1,35 +1,33 @@
 package monopoly;
 
 import java.awt.Color;
-import java.awt.Insets;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.border.LineBorder;
-import javax.swing.plaf.basic.BasicBorders;
 
 /**
  *
  * @author Kyle
  */
 public class BuySellProperties extends javax.swing.JFrame {
-    ArrayList<Player> PlayerGroup;
-    Property[] BoardProperties;
-    JButton[][] PropertyGroups;
-    int[][] PropertyNumberGroups;
-    int PlayerSelling = 0, PlayerBuying = 0, CurrentLoc = 0;
+    ArrayList<Player> playerGroup;
+    Property[] boardProperties;
+    JButton[][] propertyGroups;
+    int[][] propertyNumberGroups;
+    int playerSelling = 0, playerBuying = 0, currentLoc = 0;
     
     
     /**
      * Creates new form BuySellProperties
      */
-    public BuySellProperties(ArrayList<Player> PG, Property[] BP) {
+    public BuySellProperties(ArrayList<Player> sentPlayerGroup, Property[] sentBuildingProperties) {
         initComponents();
         
-        this.PlayerGroup = PG;
-        this.BoardProperties = BP;
+        this.playerGroup = sentPlayerGroup;
+        this.boardProperties = sentBuildingProperties;
         
         //Creates the array of property buttons. Sorted into the group colors.
-        this.PropertyGroups = new JButton[][]{
+        this.propertyGroups = new JButton[][]{
             {Property1, Property2},
             {Property3, Property4, Property5},
             {Property6, Property7, Property8},
@@ -42,7 +40,7 @@ public class BuySellProperties extends javax.swing.JFrame {
             {Utility1, Utility2}};
         
         //The location on the board of each property. Sorted into the group colors.
-        this.PropertyNumberGroups = new int[][]{
+        this.propertyNumberGroups = new int[][]{
             {1, 3},
             {6, 8, 9},
             {11, 13, 14},
@@ -55,9 +53,9 @@ public class BuySellProperties extends javax.swing.JFrame {
             {12, 28}};
         
         //Sets the text of all the buttons to represent their proper property name.
-        for (int i = 0; i < PropertyGroups.length; i++) {
-            for (int x = 0; x < PropertyGroups[i].length; x++) {
-                PropertyGroups[i][x].setText("<html>" + BoardProperties[PropertyNumberGroups[i][x]].GetPropertyName() + "</html>");
+        for (int i = 0; i < propertyGroups.length; i++) {
+            for (int x = 0; x < propertyGroups[i].length; x++) {
+                propertyGroups[i][x].setText("<html>" + boardProperties[propertyNumberGroups[i][x]].GetPropertyName() + "</html>");
             }
         }
         
@@ -67,18 +65,18 @@ public class BuySellProperties extends javax.swing.JFrame {
         resetSellButtons();
     }
 
-    private void showPropertiesOwned(int PlayerNumber) {
+    private void showPropertiesOwned(int playerNumber) {
         disableButtons();
         
-        PlayerSelling = PlayerNumber;
-        int[] OwnedProperties = PlayerGroup.get(PlayerNumber).GetLocationsOwned();
+        playerSelling = playerNumber;
+        int[] ownedProperties = playerGroup.get(playerNumber).GetLocationsOwned();
         boolean FLAG = true;
         
         //Loops through each group of properties, based on their color.
-        for (int i = 0; i < PropertyNumberGroups.length; i++) {
-            for (int x = 0; x < PropertyNumberGroups[i].length; x++) {
-                if (OwnedProperties[PropertyNumberGroups[i][x]] == 1) {
-                    PropertyGroups[i][x].setEnabled(true);
+        for (int i = 0; i < propertyNumberGroups.length; i++) {
+            for (int x = 0; x < propertyNumberGroups[i].length; x++) {
+                if (ownedProperties[propertyNumberGroups[i][x]] == 1) {
+                    propertyGroups[i][x].setEnabled(true);
                 }
             }
         }
@@ -90,12 +88,12 @@ public class BuySellProperties extends javax.swing.JFrame {
 
         //Loops through the players and hide buttons that aren't needed.
         for (int x = 0; x < arrayOfButtons.length; x++) {
-            for (int i = 3; i >= PlayerGroup.size(); i--) {
+            for (int i = 3; i >= playerGroup.size(); i--) {
                 arrayOfButtons[x][i].setVisible(false);
             }
             //Sets the names of the visible buttons.
-            for (int i = 0; i < PlayerGroup.size(); i++) {
-                arrayOfButtons[x][i].setText(PlayerGroup.get(i).GetPlayerName());
+            for (int i = 0; i < playerGroup.size(); i++) {
+                arrayOfButtons[x][i].setText(playerGroup.get(i).GetPlayerName());
             }
         }
         //Disable all of the property buttons.
@@ -108,9 +106,9 @@ public class BuySellProperties extends javax.swing.JFrame {
     private void disableButtons() {
         JButton[] arrayOfButtons = {Player1Buy, Player2Buy, Player3Buy, Player4Buy};
         
-        for (int i = 0; i < PropertyGroups.length; i++) {
-            for (int x = 0; x < PropertyGroups[i].length; x++) {
-                PropertyGroups[i][x].setEnabled(false);
+        for (int i = 0; i < propertyGroups.length; i++) {
+            for (int x = 0; x < propertyGroups[i].length; x++) {
+                propertyGroups[i][x].setEnabled(false);
             }
         }
         
@@ -121,10 +119,10 @@ public class BuySellProperties extends javax.swing.JFrame {
         ConfirmButton.setEnabled(false);
     }
     
-    private void selectPropertyToSell(int Location) {
+    private void selectPropertyToSell(int location) {
         JButton[] arrayOfButtons = {Player1Buy, Player2Buy, Player3Buy, Player4Buy};
 
-        CurrentLoc = Location;
+        currentLoc = location;
         
         for (int i = 0; i < arrayOfButtons.length; i++) {
             arrayOfButtons[i].setEnabled(true);
@@ -132,41 +130,39 @@ public class BuySellProperties extends javax.swing.JFrame {
     }
     
     private void confirmEnable() {
-        String AmountOffered = "?250?";
+        String amountOffered = "?250?";
         
         if (!AmountTextField.equals("")) {
             try {
                 int tryCatch = Integer.parseInt(AmountTextField.getText());
-                AmountOffered = "$" + AmountTextField.getText();
+                amountOffered = "$" + AmountTextField.getText();
             }
             catch (NumberFormatException e) {
-                AmountOffered = "?250?";
+                amountOffered = "?250?";
             }
         }
         
-        InfoLabel.setText(  "<html>" + PlayerGroup.get(PlayerSelling).GetPlayerName() + " is trying to sell " + BoardProperties[CurrentLoc].GetPropertyName() + 
-                            " for " + AmountOffered + " to " + PlayerGroup.get(PlayerBuying).GetPlayerName() +
+        InfoLabel.setText(  "<html>" + playerGroup.get(playerSelling).GetPlayerName() + " is trying to sell " + boardProperties[currentLoc].GetPropertyName() + 
+                            " for " + amountOffered + " to " + playerGroup.get(playerBuying).GetPlayerName() +
                             "</html>");
         
         ConfirmButton.setEnabled(true);
     }
     
     private void buySellProperty() {
-        int AmountOffered = 250;
+        int amountOffered = 250;
         
         if (!AmountTextField.equals("")) {
             try {
-                AmountOffered = Integer.parseInt(AmountTextField.getText());
+                amountOffered = Integer.parseInt(AmountTextField.getText());
             }
             catch (NumberFormatException e) {
-                AmountOffered = 250;
+                amountOffered = 250;
             }
         }
         
-        System.out.println(AmountOffered);
-        
-        PlayerGroup.get(PlayerSelling).SellPropertyFromPlayer(AmountOffered, CurrentLoc);
-        PlayerGroup.get(PlayerBuying).BuyPropertyFromPlayer(AmountOffered, CurrentLoc);
+        playerGroup.get(playerSelling).SellPropertyFromPlayer(amountOffered, currentLoc);
+        playerGroup.get(playerBuying).BuyPropertyFromPlayer(amountOffered, currentLoc);
         Monopoly.updatePropertiesOwned();
         disableButtons();
         InfoLabel.setText("<html>Thank you for purchasing this property!</html>");
@@ -664,28 +660,28 @@ public class BuySellProperties extends javax.swing.JFrame {
     private void Player4BuyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Player4BuyActionPerformed
         resetBuyButtons();
         Player4Buy.setBorder(new LineBorder(Color.RED, 2));
-        PlayerBuying = 3;
+        playerBuying = 3;
         confirmEnable();
     }//GEN-LAST:event_Player4BuyActionPerformed
 
     private void Player3BuyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Player3BuyActionPerformed
         resetBuyButtons();
         Player3Buy.setBorder(new LineBorder(Color.RED, 2));
-        PlayerBuying = 2;
+        playerBuying = 2;
         confirmEnable();
     }//GEN-LAST:event_Player3BuyActionPerformed
 
     private void Player2BuyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Player2BuyActionPerformed
         resetBuyButtons();
         Player2Buy.setBorder(new LineBorder(Color.RED, 2));
-        PlayerBuying = 1;
+        playerBuying = 1;
         confirmEnable();
     }//GEN-LAST:event_Player2BuyActionPerformed
 
     private void Player1BuyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Player1BuyActionPerformed
         resetBuyButtons();
         Player1Buy.setBorder(new LineBorder(Color.RED, 2));
-        PlayerBuying = 0;
+        playerBuying = 0;
         confirmEnable();
     }//GEN-LAST:event_Player1BuyActionPerformed
 
