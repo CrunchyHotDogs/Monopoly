@@ -22,19 +22,19 @@ public class MusicPlayer {
     private AudioInputStream AS1;
     private AudioFormat AF;
     private DataLine.Info info;
-    private Line Line1;
+    private Line line;
     
     public MusicPlayer() {
-        this.ChooseSong("/monopoly/Music/Summertime.wav");
+        this.chooseSong("/monopoly/Music/Summertime.wav");
     }
     
-    public void ChooseSong(String FilePath) {
+    public void chooseSong(String filePath) {
         if (soundClip != null && soundClip.isOpen()) {
             soundClip.stop();
         }
         
         try {
-            audioSrc = getClass().getResourceAsStream(FilePath);
+            audioSrc = getClass().getResourceAsStream(filePath);
             bufferedIn = new BufferedInputStream(audioSrc);
             AS1 = AudioSystem.getAudioInputStream(bufferedIn);
 
@@ -42,23 +42,23 @@ public class MusicPlayer {
             soundClip = AudioSystem.getClip();
             info = new DataLine.Info(Clip.class, AF);
 
-            Line1 = AudioSystem.getLine(info);
+            line = AudioSystem.getLine(info);
             
-            if (!Line1.isOpen()){
+            if (!line.isOpen()){
                 soundClip.open(AS1);
                 soundClip.loop(Clip.LOOP_CONTINUOUSLY);
             }
         }
         catch(UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            System.out.println("Error" + e);
+            System.out.println("Error : " + e);
         }
     }
 	
-    public void StartMusic() {
+    public void startMusic() {
         soundClip.start();
     }
     
-    public void StopMusic() {
+    public void stopMusic() {
         soundClip.stop();
     }
 }

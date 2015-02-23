@@ -17,11 +17,11 @@ public class MainMenu extends javax.swing.JFrame {
     final String playerOwnerImagePath = "/monopoly/Images/";
     
     //The images that are available for use.
-    String[] PossibleImages = new String[4];
-    String[] ArrayOfExcisting;
-    File Folder;
-    File[] ListOfFiles;
-    JTextField ListOfNames[] = new JTextField[4];
+    String[] possibleImages = new String[4];
+    String[] arrayOfExcisting;
+    File folder;
+    File[] listOfFiles;
+    JTextField listOfNames[] = new JTextField[4];
     JButton iconButtons[] = new JButton[4];    
     
     /**
@@ -30,37 +30,37 @@ public class MainMenu extends javax.swing.JFrame {
     public MainMenu() {
         int Counter = 0;
         
-        Folder = new File(playerIconPath);
-        ListOfFiles = Folder.listFiles();
+        folder = new File(playerIconPath);
+        listOfFiles = folder.listFiles();
         
-        for (int i = 0; i < ListOfFiles.length; i++) {
-            if (ListOfFiles[i].isFile()) {
+        for (int i = 0; i < listOfFiles.length; i++) {
+            if (listOfFiles[i].isFile()) {
                 Counter += 1;
             }
         }
         
-        ArrayOfExcisting = new String[Counter];
+        arrayOfExcisting = new String[Counter];
         
-        for (int i = 0; i < ListOfFiles.length; i++) {
-            if (ListOfFiles[i].isFile()) {
-                ArrayOfExcisting[i] = ListOfFiles[i].getName();
-                if (ArrayOfExcisting[i].indexOf(".") > 0) {
-                    ArrayOfExcisting[i] = ArrayOfExcisting[i].substring(0, ArrayOfExcisting[i].lastIndexOf("."));
+        for (int i = 0; i < listOfFiles.length; i++) {
+            if (listOfFiles[i].isFile()) {
+                arrayOfExcisting[i] = listOfFiles[i].getName();
+                if (arrayOfExcisting[i].indexOf(".") > 0) {
+                    arrayOfExcisting[i] = arrayOfExcisting[i].substring(0, arrayOfExcisting[i].lastIndexOf("."));
                 }
             }
         }
         
-        PossibleImages[0] = playerIconPath + "Player 1.jpg";
-        PossibleImages[1] = playerIconPath + "Player 2.jpg";
-        PossibleImages[2] = playerIconPath + "Player 3.jpg";
-        PossibleImages[3] = playerIconPath + "Player 4.jpg";
+        possibleImages[0] = playerIconPath + "Player 1.jpg";
+        possibleImages[1] = playerIconPath + "Player 2.jpg";
+        possibleImages[2] = playerIconPath + "Player 3.jpg";
+        possibleImages[3] = playerIconPath + "Player 4.jpg";
     
         initComponents();
         
-        ListOfNames[0] = NameOneText;
-        ListOfNames[1] = NameTwoText;
-        ListOfNames[2] = NameThreeText;
-        ListOfNames[3] = NameFourText;
+        listOfNames[0] = NameOneText;
+        listOfNames[1] = NameTwoText;
+        listOfNames[2] = NameThreeText;
+        listOfNames[3] = NameFourText;
         
         iconButtons[0] = SelectIcon1Button;
         iconButtons[1] = SelectIcon2Button;
@@ -71,85 +71,85 @@ public class MainMenu extends javax.swing.JFrame {
     private void setUpGame() {
         this.setVisible(false);
         
-        String[] PossibleOwnerImages = new String[4];
-        PossibleOwnerImages[0] = playerOwnerImagePath + "Player1Owned.png";
-        PossibleOwnerImages[1] = playerOwnerImagePath + "Player2Owned.png";
-        PossibleOwnerImages[2] = playerOwnerImagePath + "Player3Owned.png";
-        PossibleOwnerImages[3] = playerOwnerImagePath + "Player4Owned.png";
+        String[] possibleOwnerImages = new String[4];
+        possibleOwnerImages[0] = playerOwnerImagePath + "Player1Owned.png";
+        possibleOwnerImages[1] = playerOwnerImagePath + "Player2Owned.png";
+        possibleOwnerImages[2] = playerOwnerImagePath + "Player3Owned.png";
+        possibleOwnerImages[3] = playerOwnerImagePath + "Player4Owned.png";
         //Creates a variable and give it a default of the Original Board. Gives the game a default value of $1500 for money.
-        String GameType = "Original";
-        int StartingGold = 1500;
+        String gameType = "Original";
+        int startingGold = 1500;
         
-        int NumOfPlayers = 0;
+        int numOfPlayers = 0;
         
         //Tries to get the game type the user wants to play.
         if (GameTypeList.getSelectedValue() != null) {
-            GameType = GameTypeList.getSelectedValue().toString();
+            gameType = GameTypeList.getSelectedValue().toString();
         }
         
         //Tries to get the money the user wants to play with.
         if (!StartGoldText.equals("")) {
             try {
-                StartingGold = Integer.parseInt(StartGoldText.getText());
+                startingGold = Integer.parseInt(StartGoldText.getText());
             }
             catch (NumberFormatException e) {
-                StartingGold = 1000;
+                startingGold = 1000;
             }
         }
         
         //Finds how many players the user has entered.
-        for (int i = 0; i < ListOfNames.length; i++) {
-            if (!ListOfNames[i].getText().equals("")) {
-                NumOfPlayers += 1;
+        for (int i = 0; i < listOfNames.length; i++) {
+            if (!listOfNames[i].getText().equals("")) {
+                numOfPlayers += 1;
             }
         }
         
         //Checks to see if there is at least two players entered.
-        if (NumOfPlayers > 1) {
-            String[] PlayerNames = new String[NumOfPlayers];
-            String[] PlayerImages = new String[NumOfPlayers];
-            String[] PlayerOwnedImages = new String[NumOfPlayers];
-            int Counter = 0;
+        if (numOfPlayers > 1) {
+            String[] playerNames = new String[numOfPlayers];
+            String[] playerImages = new String[numOfPlayers];
+            String[] playerOwnedImages = new String[numOfPlayers];
+            int counter = 0;
         
             //Adds the player's info into an array.
-            for (int i = 0; i < ListOfNames.length; i++) {
-                if (!ListOfNames[i].getText().equals("")) {
-                    PlayerNames[Counter] = ListOfNames[i].getText();
-                    PlayerImages[Counter] = PossibleImages[i];
-                    PlayerOwnedImages[Counter] = PossibleOwnerImages[Counter];
-                    Counter += 1;
+            for (int i = 0; i < listOfNames.length; i++) {
+                if (!listOfNames[i].getText().equals("")) {
+                    playerNames[counter] = listOfNames[i].getText();
+                    playerImages[counter] = possibleImages[i];
+                    playerOwnedImages[counter] = possibleOwnerImages[counter];
+                    counter += 1;
                 }
             }
         
             //Create a new monopoly game.
-            Monopoly.createMonopolyGame(NumOfPlayers, PlayerNames, PlayerImages, GameType, StartingGold, PlayerOwnedImages);
+            Monopoly.createMonopolyGame(numOfPlayers, playerNames, playerImages, gameType, startingGold, playerOwnedImages);
         }
         //If the user didn't enter enough players.
         else {
-            String[] PlayerNames = new String[2];
-            String[] PlayerImages = new String[2];
-            String[] PlayerOwnerImages = new String[2];
+            String[] playerNames = new String[2];
+            String[] playerImages = new String[2];
+            String[] playerOwnerImages = new String[2];
             
-            PlayerNames[0] = "Kyle";
-            PlayerNames[1] = "Len";
+            playerNames[0] = "Kyle";
+            playerNames[1] = "Len";
         
-            PlayerImages[0] = PossibleImages[0];
-            PlayerImages[1] = PossibleImages[1];
+            playerImages[0] = possibleImages[0];
+            playerImages[1] = possibleImages[1];
             
-            PlayerOwnerImages[0] = PossibleOwnerImages[0];
-            PlayerOwnerImages[1] = PossibleOwnerImages[1];
+            playerOwnerImages[0] = possibleOwnerImages[0];
+            playerOwnerImages[1] = possibleOwnerImages[1];
             
-            Monopoly.createMonopolyGame(2, PlayerNames, PlayerImages, GameType, StartingGold, PlayerOwnerImages);
+            Monopoly.createMonopolyGame(2, playerNames, playerImages, gameType, startingGold, playerOwnerImages);
         }
     }
     
-    private void setIcon(int PlayerToSet) {
+    private void setIcon(int playerToSet) {
         String popUpTitle = "";
-        JList iconList = new JList(ArrayOfExcisting);
+        JList iconList = new JList(arrayOfExcisting);
         iconList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         
-        if (!ListOfNames[PlayerToSet].getText().equals("")) {
-            popUpTitle = "Pick An Icon For " + ListOfNames[PlayerToSet].getText();
+        if (!listOfNames[playerToSet].getText().equals("")) {
+            popUpTitle = "Pick An Icon For " + listOfNames[playerToSet].getText();
         }
         else {
             popUpTitle = "Choose An Icon";
@@ -158,8 +158,8 @@ public class MainMenu extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(null, iconList, popUpTitle, JOptionPane.PLAIN_MESSAGE);
         
         if (iconList.getSelectedValue() != null) {
-            PossibleImages[PlayerToSet] = playerIconPath + iconList.getSelectedValue().toString() + ".jpg";
-            iconButtons[PlayerToSet].setText(iconList.getSelectedValue().toString());
+            possibleImages[playerToSet] = playerIconPath + iconList.getSelectedValue().toString() + ".jpg";
+            iconButtons[playerToSet].setText(iconList.getSelectedValue().toString());
         }
     }
     
@@ -382,7 +382,7 @@ public class MainMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_SelectIcon4ButtonActionPerformed
 
     private void ChangeMusicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChangeMusicActionPerformed
-        Monopoly.ChangeMusic();
+        Monopoly.changeMusic();
     }//GEN-LAST:event_ChangeMusicActionPerformed
 
     /**

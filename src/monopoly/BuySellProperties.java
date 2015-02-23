@@ -55,7 +55,7 @@ public class BuySellProperties extends javax.swing.JFrame {
         //Sets the text of all the buttons to represent their proper property name.
         for (int i = 0; i < propertyGroups.length; i++) {
             for (int x = 0; x < propertyGroups[i].length; x++) {
-                propertyGroups[i][x].setText("<html>" + boardProperties[propertyNumberGroups[i][x]].GetPropertyName() + "</html>");
+                propertyGroups[i][x].setText("<html>" + boardProperties[propertyNumberGroups[i][x]].getName() + "</html>");
             }
         }
         
@@ -69,7 +69,7 @@ public class BuySellProperties extends javax.swing.JFrame {
         disableButtons();
         
         playerSelling = playerNumber;
-        int[] ownedProperties = playerGroup.get(playerNumber).GetLocationsOwned();
+        int[] ownedProperties = playerGroup.get(playerNumber).getLocationsOwned();
         boolean FLAG = true;
         
         //Loops through each group of properties, based on their color.
@@ -93,7 +93,7 @@ public class BuySellProperties extends javax.swing.JFrame {
             }
             //Sets the names of the visible buttons.
             for (int i = 0; i < playerGroup.size(); i++) {
-                arrayOfButtons[x][i].setText(playerGroup.get(i).GetPlayerName());
+                arrayOfButtons[x][i].setText(playerGroup.get(i).getName());
             }
         }
         //Disable all of the property buttons.
@@ -142,8 +142,8 @@ public class BuySellProperties extends javax.swing.JFrame {
             }
         }
         
-        InfoLabel.setText(  "<html>" + playerGroup.get(playerSelling).GetPlayerName() + " is trying to sell " + boardProperties[currentLoc].GetPropertyName() + 
-                            " for " + amountOffered + " to " + playerGroup.get(playerBuying).GetPlayerName() +
+        InfoLabel.setText(  "<html>" + playerGroup.get(playerSelling).getName() + " is trying to sell " + boardProperties[currentLoc].getName() + 
+                            " for " + amountOffered + " to " + playerGroup.get(playerBuying).getName() +
                             "</html>");
         
         ConfirmButton.setEnabled(true);
@@ -161,8 +161,8 @@ public class BuySellProperties extends javax.swing.JFrame {
             }
         }
         
-        playerGroup.get(playerSelling).SellPropertyFromPlayer(amountOffered, currentLoc);
-        playerGroup.get(playerBuying).BuyPropertyFromPlayer(amountOffered, currentLoc);
+        playerGroup.get(playerSelling).sellPropertyToPlayer(amountOffered, currentLoc);
+        playerGroup.get(playerBuying).buyPropertyFromPlayer(amountOffered, currentLoc);
         Monopoly.updatePropertiesOwned();
         disableButtons();
         InfoLabel.setText("<html>Thank you for purchasing this property!</html>");

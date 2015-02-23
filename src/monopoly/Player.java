@@ -1,48 +1,41 @@
 package monopoly;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
-
 /**
  * A class that holds all the information about each player.
  * @author c0621990 - Kyle Crossman
  * @date December 3 2014
  */
 public class Player {
-    private int PlayerNumber, PlayerMoney, PlayerLocation, RailroadsOwned, UtilitiesOwned, TurnsInJail;
-    private String PlayerName, PlayerImage, PlayerOwnedImage;
-    private int LocationOwned[] = new int[40];
-    private boolean IsJailed, HasFreeJailCard;
+    private int id, money, location, railroadsOwned, utilitiesOwned, turnsInJail;
+    private String name, tokenImage, ownedImage;
+    private int locationsOwned[] = new int[40];
+    private boolean isJailed, hasFreeJailCard;
     
     /**
      * The player constructor. Creates a new player object.
      * 
-     * @param PNum The player's number.
-     * @param PMoney The player's starting money.
-     * @param PName The player's name.
-     * @param PImage The player's image URL.
+     * @param sentId The player's number.
+     * @param sentMoney The player's starting money.
+     * @param sentName The player's name.
+     * @param sentTokenImage The player's image URL.
+     * @param sentOwnedImage The image that will be used to display this player owns a property.
      */
-    public Player(int PNum, int PMoney, String PName, String PImage, String POImage) {
-        PlayerNumber = PNum;
-        PlayerName = PName;
-        PlayerImage = PImage;
-        PlayerOwnedImage = POImage;
-        PlayerMoney = PMoney;
-        PlayerLocation = 0;
-        RailroadsOwned = 0;
-        UtilitiesOwned = 0;
-        TurnsInJail = 0;
-        IsJailed = false;
-        HasFreeJailCard = false;
+    public Player(int sentId, int sentMoney, String sentName, String sentTokenImage, String sentOwnedImage) {
+        id = sentId;
+        name = sentName;
+        tokenImage = sentTokenImage;
+        ownedImage = sentOwnedImage;
+        money = sentMoney;
+        location = 0;
+        railroadsOwned = 0;
+        utilitiesOwned = 0;
+        turnsInJail = 0;
+        isJailed = false;
+        hasFreeJailCard = false;
 
         //Sets the array to default of the player not owning any property.
-        for (int i = 0; i < LocationOwned.length; i++) {
-            LocationOwned[i] = 0;
+        for (int i = 0; i < locationsOwned.length; i++) {
+            locationsOwned[i] = 0;
         } 
     }
     
@@ -50,8 +43,8 @@ public class Player {
      * Gets the player number.
      * @return Int - The player's number.
      */
-    public int GetPlayerNumber() {
-        return this.PlayerNumber;
+    public int getId() {
+        return this.id;
     }
     
     /**
@@ -59,8 +52,8 @@ public class Player {
      * 
      * @return The player's name.
      */
-    public String GetPlayerName() {
-        return PlayerName;
+    public String getName() {
+        return this.name;
     }
     
     /**
@@ -68,8 +61,8 @@ public class Player {
      * 
      * @return The location where the player is. Will be an index of an array.
      */
-    public int GetPlayerLocation() {
-        return PlayerLocation;
+    public int getLocation() {
+        return this.location;
     }
     
     /**
@@ -77,12 +70,12 @@ public class Player {
      * 
      * @return The location of the image for the player.
      */
-    public String GetPlayerImage() {
-        return PlayerImage;
+    public String getTokenImage() {
+        return this.tokenImage;
     }
     
-    public String GetPlayerOwnedImage() {
-        return PlayerOwnedImage;
+    public String getOwnedImage() {
+        return this.ownedImage;
     }
     
     /**
@@ -90,8 +83,8 @@ public class Player {
      * 
      * @return The amount of money the player has.
      */
-    public int GetPlayerMoney() {
-        return PlayerMoney;
+    public int getMoney() {
+        return this.money;
     }
     
     /**
@@ -99,8 +92,8 @@ public class Player {
      * 
      * @return An array of all the properties. 0 means they do not own, 1 means they own.
      */
-    public int[] GetLocationsOwned() {
-        return LocationOwned;
+    public int[] getLocationsOwned() {
+        return locationsOwned;
     }
     
     /**
@@ -108,108 +101,134 @@ public class Player {
      * 
      * @return The number of railroads that this player owns.
      */
-    public int GetRailroadsOwned() {
-        return RailroadsOwned;
+    public int getRailroadsOwned() {
+        return railroadsOwned;
     }
+    
+    
+    /**
+     * A getter for the variable TurnsInJail.
+     * @return How many turns the player has spent in jail.
+     */
+    public int getTurnsInJail() {
+        return this.turnsInJail;
+    }
+    
+    
+    /**
+     * A getter for the getHasFreeJailCard variable. Tells the program if they have
+     * a get out of jail free card.
+     * @return A boolean saying if the player has a get out of jail card.
+     */
+    public boolean getHasFreeJailCard() {
+        return this.hasFreeJailCard;
+    }
+    
+    
+    /**
+     * A getter for the variable getIsJailed. Tells the program if the player is 
+     * in jail or not.
+     * @return A boolean saying if the player is in jail or not.
+     */
+    public boolean getIsJailed() {
+        return this.isJailed;
+    }
+    
     
     /**
      * Returns the tax amount multiplier for railroads.
      * 
      * @return The multiplier for the railroad tax.
      */
-    public int GetRailroadMultiplier() {
-        int Multiplier = 0;
+    public int findRailroadMultiplier() {
+        int multiplier = 0;
         
-        if (this.RailroadsOwned == 1) {
-            Multiplier = 1;
+        if (this.railroadsOwned == 1) {
+            multiplier = 1;
         }
-        else if (this.RailroadsOwned == 2) {
-            Multiplier = 2;
+        else if (this.railroadsOwned == 2) {
+            multiplier = 2;
         }
-        else if (this.RailroadsOwned == 3) {
-            Multiplier = 4;
+        else if (this.railroadsOwned == 3) {
+            multiplier = 4;
         }
-        else if (this.RailroadsOwned == 4) {
-            Multiplier = 8;
+        else if (this.railroadsOwned == 4) {
+            multiplier = 8;
         }
         else {
-            Multiplier = 0;
+            multiplier = 0;
         }
         
-        return Multiplier;
+        return multiplier;
     }
+    
     
     /**
      * Returns the tax multiplier for utilities.
      * 
      * @return The multiplier for the utility tax. Utility tax is calculated from roll x this number.
      */
-    public int GetUtilityMultiplier() {
-        int Multiplier = 0;
+    public int findUtilityMultiplier() {
+        int multiplier = 0;
         
-        if (this.UtilitiesOwned == 1) {
-            Multiplier = 4;
+        if (this.utilitiesOwned == 1) {
+            multiplier = 4;
         }
-        else if (this.UtilitiesOwned == 2) {
-            Multiplier = 10;
+        else if (this.utilitiesOwned == 2) {
+            multiplier = 10;
         }
         else {
-            Multiplier = 0;
+            multiplier = 0;
         }
         
-        return Multiplier;
+        return multiplier;
     }
     
-    /**
-     * A getter for the variable TurnsInJail.
-     * @return How many turns the player has spent in jail.
-     */
-    public int GetTurnsInJail() {
-        return this.TurnsInJail;
-    }
     
     /**
      * Sets the location of the player. Each space is an index in an array.
      * Sets the location of the player to one of those indexes. If the player passes
      * go give them $200 and keep moving them around the board.
      * 
-     * @param PLocation The amount of spaces that the player will move forward.
+     * @param sentLocation The amount of spaces that the player will move forward.
      * @return A string saying if the player passed go or not. ("YES" or "NO").
      */
-    public String SetPlayerLocation(int PLocation) {
-        String PassedGo = "NO";
+    public String setLocation(int sentLocation) {
+        String passedGo = "NO";
         
-        PlayerLocation += PLocation;
+        this.location += sentLocation;
         
         //Checks to see if the player has passed go.
-        if (PlayerLocation > 39) {
-            PassedGo = "YES";
-            PlayerLocation -= 40;
-            this.IncreaseMoney(200);
+        if (this.location > 39) {
+            passedGo = "YES";
+            this.location -= 40;
+            this.increaseMoney(200);
         }
         
-        return PassedGo;
+        return passedGo;
     }
+    
     
     /**
      * Moves the player right to the go space. Finds how many spots the player 
      * needs to move in order to reach go.
      */
-    public void SendPlayerToGo() {
-        this.SetPlayerLocation(40 - this.PlayerLocation);
+    public void sendPlayerToGo() {
+        this.setLocation(40 - this.location);
     }
+    
     
     /**
      * Sends the player to a specific location on the board. Finds the number of spaces
      * they need to move and moves them that amount.
      * 
-     * @param LocationNumber The place on the board the player will be moving to.
+     * @param sentLocation The place on the board the player will be moving to.
      * @return A string saying if the player passed go or not. ("YES" or "NO").
      */
-    public String SendPlayerToSpecific(int LocationNumber) {
-        int AmountToMove = GetAmountToMove(LocationNumber);
+    public String sendPlayerToSpecific(int sentLocation) {
+        int amountToMove = getAmountToMove(sentLocation);
         
-        return this.SetPlayerLocation(AmountToMove);
+        return this.setLocation(amountToMove);
     }
     
     /**
@@ -219,18 +238,19 @@ public class Player {
      * 
      * @return A string saying if the player passed go or not. ("YES" or "NO").
      */
-    public String SendPlayerToUtility() {
-        int AmountToMoveElectric = GetAmountToMove(12);
-        int AmountToMoveWater = GetAmountToMove(28);
+    public String sendPlayerToUtility() {
+        int amountToMoveElectric = getAmountToMove(12);
+        int amountToMoveWater = getAmountToMove(28);
         
         //Decides which is closer.
-        if (AmountToMoveElectric > AmountToMoveWater) {
-            return this.SetPlayerLocation(AmountToMoveWater);
+        if (amountToMoveElectric > amountToMoveWater) {
+            return this.setLocation(amountToMoveWater);
         }
         else {
-            return this.SetPlayerLocation(AmountToMoveElectric);
+            return this.setLocation(amountToMoveElectric);
         }
     }
+    
     
     /**
      * Sends the player to the nearest railroad. Finds how many spaces the player needs to move
@@ -239,88 +259,73 @@ public class Player {
      * 
      * @return A string saying if the player passed go or not. ("YES" or "NO").
      */
-    public String SendPlayerToRailroad() {
-        int AmountToMove[] = {GetAmountToMove(5), GetAmountToMove(15), GetAmountToMove(25), GetAmountToMove(35)};
-        int ShortestAmount = 0;        
+    public String sendPlayerToRailroad() {
+        int amountToMove[] = {getAmountToMove(5), getAmountToMove(15), getAmountToMove(25), getAmountToMove(35)};
+        int shortestAmount = 0;        
         
-        for (int i = 0; i < AmountToMove.length; i++) {
-            if (AmountToMove[ShortestAmount] > AmountToMove[i]) {
-                ShortestAmount = i;
+        for (int i = 0; i < amountToMove.length; i++) {
+            if (amountToMove[shortestAmount] > amountToMove[i]) {
+                shortestAmount = i;
             }
         }
         
-        return SetPlayerLocation(AmountToMove[ShortestAmount]);
+        return setLocation(amountToMove[shortestAmount]);
     }
+    
     
     /**
      * Finds the amount of spaces that the current player needs to move forward
      * in order to land on a specific location.
      * 
-     * @param PropertyLocation The property the player will be landing on.
+     * @param propertyLocation The property the player will be landing on.
      * @return The number that the player needs to move.
      */
-    private int GetAmountToMove(int PropertyLocation) {
-        int AmountToMove = 0;
+    private int getAmountToMove(int propertyLocation) {
+        int amountToMove = 0;
         
-        AmountToMove = PropertyLocation - this.PlayerLocation;
+        amountToMove = propertyLocation - this.location;
         
-        if (AmountToMove < 0) {
-            AmountToMove = PropertyLocation + (40 - this.PlayerLocation);
+        if (amountToMove < 0) {
+            amountToMove = propertyLocation + (40 - this.location);
         }
         
-        return AmountToMove;
+        return amountToMove;
     }
     
     /**
-     * A setter for the HasFreeJailCard variable. Gives the user a get out of
+     * A setter for the getHasFreeJailCard variable. Gives the user a get out of
      * jail free card (Sets variable to true).
      */
-    public void AwardFreeJailCard() {
-        this.HasFreeJailCard = true;
+    public void awardFreeJailCard() {
+        this.hasFreeJailCard = true;
+    }
+    
+    
+    /**
+     * When the player is sent to jail. Sets the location of the player to be at 
+     * jail, start the counter for how many turns they have been in jail, 
+     * and sets the getIsJailed variable to true.
+     */
+    public void goToJail() {
+        this.location = 10;
+        this.turnsInJail = 0;
+        this.isJailed = true;
     }
     
     /**
-     * A getter for the HasFreeJailCard variable. Tells the program if they have
-     * a get out of jail free card.
-     * @return A boolean saying if the player has a get out of jail card.
+     * When the player exits jail. Set the getIsJailed variable to false.
      */
-    public boolean HasFreeJailCard() {
-        return this.HasFreeJailCard;
+    public void exitJail() {
+        this.isJailed = false;
     }
     
-    /**
-     * When the player is sent to jail. Sets the location of the player to be at
-     * jail, start the counter for how many turns they have been in jail, and sets
-     * the IsJailed variable to true.
-     */
-    public void GoToJail() {
-        this.PlayerLocation = 10;
-        this.TurnsInJail = 0;
-        this.IsJailed = true;
-    }
-    
-    /**
-     * When the player exits jail. Set the IsJailed variable to false.
-     */
-    public void ExitJail() {
-        this.IsJailed = false;
-    }
-    
-    /**
-     * A getter for the variable IsJailed. Tells the program if the player is 
-     * in jail or not.
-     * @return A boolean saying if the player is in jail or not.
-     */
-    public boolean IsJailed() {
-        return this.IsJailed;
-    }
     
     /**
      * Each turn the player is in jail. Add one to the number of turns they 
      * have been in jail.
      */
-    public void StillInJail() {
-        this.TurnsInJail += 1;
+    public void stillInJail() {
+        this.turnsInJail += 1;
     }
     
     /**
@@ -328,8 +333,8 @@ public class Player {
      * 
      * @param Money The amount of money to subtract.
      */
-    public void SubtractMoney(int Money) {
-        this.PlayerMoney -= Money;
+    public void subtractMoney(int sentMoney) {
+        this.money -= sentMoney;
     }
     
     /**
@@ -337,8 +342,8 @@ public class Player {
      * 
      * @param Money The amount of money to add.
      */
-    public void IncreaseMoney(int Money) {
-        this.PlayerMoney += Money;
+    public void increaseMoney(int sentMoney) {
+        this.money += sentMoney;
     }
     
     /**
@@ -348,34 +353,34 @@ public class Player {
      * 
      * @param Cost The cost of the property that the player is buying.
      */
-    public void BuyProperty(int Cost) {
-        LocationOwned[this.PlayerLocation] = 1;
-        this.SubtractMoney(Cost);
+    public void buyProperty(int sentCost) {
+        locationsOwned[this.location] = 1;
+        this.subtractMoney(sentCost);
     }
     
-    public void BuyPropertyFromPlayer(int Cost, int Location) {
-        LocationOwned[Location] = 1;
-        this.SubtractMoney(Cost);
+    public void buyPropertyFromPlayer(int sentCost, int sentLocation) {
+        locationsOwned[sentLocation] = 1;
+        this.subtractMoney(sentCost);
     }
     
-    public void SellPropertyFromPlayer(int Cost, int Location) {
-        LocationOwned[Location] = 0;
-        this.IncreaseMoney(Cost);
+    public void sellPropertyToPlayer(int sentCost, int sentLocation) {
+        locationsOwned[sentLocation] = 0;
+        this.increaseMoney(sentCost);
     }
     
     /**
      * When the player buys a railroad. Adds one to the tax multiplier for
      * railroads.
      */
-    public void BuyRailroad() {
-        this.RailroadsOwned += 1;
+    public void buyRailroad() {
+        this.railroadsOwned += 1;
     }
     
     /**
      * When the player buys an utility type property. Add one to the tax 
      * multiplier for utilities.
      */
-    public void BuyUtility() {
-        this.UtilitiesOwned += 1;
+    public void buyUtility() {
+        this.utilitiesOwned += 1;
     }
 }

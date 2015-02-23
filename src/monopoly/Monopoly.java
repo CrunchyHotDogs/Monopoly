@@ -6,53 +6,54 @@ package monopoly;
  * @date December 3 2014
  */
 public class Monopoly {
-    private static MainGame mg = null;
-    private static MusicPlayer mp = null;
+    private static MainGame mainGame = null;
+    private static MusicPlayer musicPlayer = null;
     
     /**
      * Creates a new instance of the monopoly game.
      * 
-     * @param PlayerCount The number of players playing.
-     * @param PlayerNames An array of the player's names.
-     * @param PlayerImages An array of the player's image locations.
-     * @param GameType The board style that is being played.
-     * @param StartingGold The starting money for the game.
+     * @param playerCount The number of players playing.
+     * @param playerNames An array of the player's names.
+     * @param playerImages An array of the player's image locations.
+     * @param gameType The board style that is being played.
+     * @param startingGold The starting money for the game.
+     * @param playerOwnedLabels The color that will display above a property if a player owns it.
      */
-    public static void createMonopolyGame(int PlayerCount, String[] PlayerNames, String[] PlayerImages, String GameType, int StartingGold, String[] PlayerOwnedLabels) {
-        mg = new MainGame(PlayerCount, PlayerNames, PlayerImages, GameType, StartingGold, PlayerOwnedLabels);
-        mg.setVisible(true);
+    public static void createMonopolyGame(int playerCount, String[] playerNames, String[] playerImages, String gameType, int startingGold, String[] playerOwnedLabels) {
+        mainGame = new MainGame(playerCount, playerNames, playerImages, gameType, startingGold, playerOwnedLabels);
+        mainGame.setVisible(true);
     }
     
     /**
      * Updates the houses on the monopoly board.
      */
     public static void updateMonopolyHouses() {
-        mg.updateHousing();
-        mg.updateMoney();
+        mainGame.updateHousing();
+        mainGame.updateMoney();
     }
     
     public static void updatePropertiesOwned() {
-        mg.updatePropertiesOwned();
-        mg.updateMoney();
+        mainGame.updatePropertiesOwned();
+        mainGame.updateMoney();
     }
     
-    public static boolean PauseMusic(boolean IsMusicPlaying) {
-        boolean SendBooleanBack;
+    public static boolean pauseMusic(boolean isMusicPlaying) {
+        boolean sendBooleanBack;
         
-        if (IsMusicPlaying == true) {
-            SendBooleanBack = false;
-            mp.StopMusic();
+        if (isMusicPlaying == true) {
+            sendBooleanBack = false;
+            musicPlayer.stopMusic();
         }
         else {
-            SendBooleanBack = true;
-            mp.StartMusic();
+            sendBooleanBack = true;
+            musicPlayer.startMusic();
         }
         
-        return SendBooleanBack;
+        return sendBooleanBack;
     }
     
-    public static void ChangeMusic() {
-        mp.ChooseSong("/monopoly/Music/Sevje.wav");
+    public static void changeMusic() {
+        musicPlayer.chooseSong("/monopoly/Music/Sevje.wav");
     }
     
     /**
@@ -60,13 +61,13 @@ public class Monopoly {
      */
     public static void main(String[] args) {
         new MainMenu().setVisible(true);
-        mp = new MusicPlayer();
-        mp.StartMusic();
+        musicPlayer = new MusicPlayer();
+        musicPlayer.startMusic();
         
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
-                if (mp != null) {
-                    mp.StopMusic();
+                if (musicPlayer != null) {
+                    musicPlayer.stopMusic();
                 }
             }
         });

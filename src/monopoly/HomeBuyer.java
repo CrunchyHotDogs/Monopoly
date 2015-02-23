@@ -11,23 +11,23 @@ import javax.swing.border.LineBorder;
  * @date December 3 2014
  */
 public class HomeBuyer extends javax.swing.JFrame {
-    ArrayList<Player> PlayerGroup;
-    Property[] BoardProperties;
-    JButton[][] PropertyGroups;
-    int[][] PropertyNumberGroups;
-    int CurrentPlayer = 0, CurrentLoc = 0;
+    ArrayList<Player> playerGroup;
+    Property[] boardProperties;
+    JButton[][] propertyGroups;
+    int[][] propertyNumberGroups;
+    int currentPlayer = 0, currentLoc = 0;
     
     /**
      * Creates new form HomeBuyer
      */
-    public HomeBuyer(ArrayList<Player> PG, Property[] BP) {
+    public HomeBuyer(ArrayList<Player> sentPlayerGroup, Property[] sentBoardProperties) {
         initComponents();
         
-        this.PlayerGroup = PG;
-        this.BoardProperties = BP;
+        this.playerGroup = sentPlayerGroup;
+        this.boardProperties = sentBoardProperties;
         
         //Creates the array of property buttons. Sorted into the group colors.
-        this.PropertyGroups = new JButton[][]{
+        this.propertyGroups = new JButton[][]{
             {Property1, Property2},
             {Property3, Property4, Property5},
             {Property6, Property7, Property8},
@@ -38,7 +38,7 @@ public class HomeBuyer extends javax.swing.JFrame {
             {Property21, Property22}};
         
         //The location on the board of each property. Sorted into the group colors.
-        this.PropertyNumberGroups = new int[][]{
+        this.propertyNumberGroups = new int[][]{
             {1, 3},
             {6, 8, 9},
             {11, 13, 14},
@@ -49,9 +49,9 @@ public class HomeBuyer extends javax.swing.JFrame {
             {37, 39}};
         
         //Sets the text of all the buttons to represent their proper property name.
-        for (int i = 0; i < PropertyGroups.length; i++) {
-            for (int x = 0; x < PropertyGroups[i].length; x++) {
-                PropertyGroups[i][x].setText("<html>" + BoardProperties[PropertyNumberGroups[i][x]].GetPropertyName() + "</html>");
+        for (int i = 0; i < propertyGroups.length; i++) {
+            for (int x = 0; x < propertyGroups[i].length; x++) {
+                propertyGroups[i][x].setText("<html>" + boardProperties[propertyNumberGroups[i][x]].getName() + "</html>");
             }
         }
         
@@ -66,18 +66,18 @@ public class HomeBuyer extends javax.swing.JFrame {
      * 
      * @param PlayerNumber Which player is being looked at.
      */
-    private void showPropertiesForHouse(int PlayerNumber) {
+    private void showPropertiesForHouse(int playerNumber) {
         disableButtons();
         
-        CurrentPlayer = PlayerNumber;
-        int[] OwnedProperties = PlayerGroup.get(PlayerNumber).GetLocationsOwned();
+        currentPlayer = playerNumber;
+        int[] ownedProperties = playerGroup.get(playerNumber).getLocationsOwned();
         boolean FLAG = true;
         
         //Loops through each group of properties, based on their color.
-        for (int i = 0; i < PropertyNumberGroups.length; i++) {
-            for (int x = 0; x < PropertyNumberGroups[i].length; x++) {
+        for (int i = 0; i < propertyNumberGroups.length; i++) {
+            for (int x = 0; x < propertyNumberGroups[i].length; x++) {
                 //Checks to see if the player owns all of the properties in that group, if they don't set the flag to false.
-                if (OwnedProperties[PropertyNumberGroups[i][x]] != 1) {
+                if (ownedProperties[propertyNumberGroups[i][x]] != 1) {
                     FLAG = false;
                 }
             }
@@ -85,10 +85,10 @@ public class HomeBuyer extends javax.swing.JFrame {
             //If the player owns all the properties in that group.
             if (FLAG == true) {
                 //Loop through the group and enable the buttons.
-                for (int x = 0; x < PropertyGroups[i].length; x++) {
+                for (int x = 0; x < propertyGroups[i].length; x++) {
                     //Checks to see if there are less than four houses on the property.
-                    if (BoardProperties[PropertyNumberGroups[i][x]].GetHouses() != 4) {
-                        PropertyGroups[i][x].setEnabled(true);
+                    if (boardProperties[propertyNumberGroups[i][x]].getHouses() != 4) {
+                        propertyGroups[i][x].setEnabled(true);
                     }
                 }
             }
@@ -110,9 +110,9 @@ public class HomeBuyer extends javax.swing.JFrame {
      * 
      * @param Location The location that is being looked at to buy a house.
      */
-    private void confirmEnable(int Location) {
-        InfoLabel.setText("<html>Buy a house at " + BoardProperties[Location].GetPropertyName() + " for $" + BoardProperties[Location].GetBuildingCost() + "</html>");
-        CurrentLoc = Location;
+    private void confirmEnable(int location) {
+        InfoLabel.setText("<html>Buy a house at " + boardProperties[location].getName() + " for $" + boardProperties[location].getHouseCost() + "</html>");
+        currentLoc = location;
         ConfirmButton.setEnabled(true);
     }
     
@@ -120,9 +120,9 @@ public class HomeBuyer extends javax.swing.JFrame {
      * Purchases a house for the property that was selected.
      */
     private void buyPropertyHouse() {
-        PlayerGroup.get(CurrentPlayer).SubtractMoney(BoardProperties[CurrentLoc].buyHouse());
+        playerGroup.get(currentPlayer).subtractMoney(boardProperties[currentLoc].buyHouse());
         ConfirmButton.setEnabled(false);
-        showPropertiesForHouse(CurrentPlayer);
+        showPropertiesForHouse(currentPlayer);
         InfoLabel.setText("<html>Thank you for purchasing a house!</html>");
         Monopoly.updateMonopolyHouses();
     }
@@ -135,12 +135,12 @@ public class HomeBuyer extends javax.swing.JFrame {
         JButton[] arrayOfButtons = {PlayerOneButton, PlayerTwoButton, PlayerThreeButton, PlayerFourButton};
 
         //Loops through the players and hide buttons that aren't needed.
-        for (int i = 3; i >= PlayerGroup.size(); i--) {
+        for (int i = 3; i >= playerGroup.size(); i--) {
             arrayOfButtons[i].setVisible(false);
         }
         //Sets the names of the visible buttons.
-        for (int i = 0; i < PlayerGroup.size(); i++) {
-            arrayOfButtons[i].setText(PlayerGroup.get(i).GetPlayerName());
+        for (int i = 0; i < playerGroup.size(); i++) {
+            arrayOfButtons[i].setText(playerGroup.get(i).getName());
         }
         
         //Disable all of the property buttons.
@@ -151,9 +151,9 @@ public class HomeBuyer extends javax.swing.JFrame {
      * Disable all of the property buttons.
      */
     private void disableButtons() {
-        for (int i = 0; i < PropertyGroups.length; i++) {
-            for (int x = 0; x < PropertyGroups[i].length; x++) {
-                PropertyGroups[i][x].setEnabled(false);
+        for (int i = 0; i < propertyGroups.length; i++) {
+            for (int x = 0; x < propertyGroups[i].length; x++) {
+                propertyGroups[i][x].setEnabled(false);
             }
         }
         

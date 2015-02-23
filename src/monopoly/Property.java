@@ -8,61 +8,60 @@ package monopoly;
  * @date December 3 2014
  */
 public class Property {
-    private String PropertyName, PropertyType;
-    private int PropCost, Houses, BuildingCost, Owner; //PropCost = Cost to first purchase property. Houses = Number of houses.
-                                                       //BuildingCost = Cost for each house. Owner = The players number who owns this.
-    private int PropTax[] = new int[6];
-    private boolean PropOwned;
+    private String name, type;
+    private int purchaseCost, houses, houseCost, owner;  
+    private int taxes[] = new int[6];
+    private boolean isOwned;
     
-    public Property(String PName, String PType, int PTax[], int PCost, int BCost) {
-        this.PropertyName = PName;
-        this.PropCost = PCost;
-        this.PropTax[0] = PTax[0];
-        this.PropTax[1] = PTax[1];
-        this.PropTax[2] = PTax[2];
-        this.PropTax[3] = PTax[3];
-        this.PropTax[4] = PTax[4];
-        this.PropTax[5] = PTax[5];
-        this.PropertyType = PType;
-        this.Houses = 0;
-        this.BuildingCost = BCost;
-        this.PropOwned = false;
-        this.Owner = -1;
-    }
-    
-    public String GetPropertyName() {
-        return this.PropertyName;
-    }
-    public int GetPropertyCost() {
-        return this.PropCost;
-    }
-    public int GetPropertyTax() {
-        return this.PropTax[this.Houses];
-    }
-    public String GetPropertyType() {
-        return this.PropertyType;
-    }
-    public boolean GetPropOwned() {
-        return this.PropOwned;
-    }
-    public int GetOwner() {
-        return this.Owner;
-    }
-    public int GetBuildingCost() {
-        return this.BuildingCost;
-    }
-    public int GetHouses() {
-        return this.Houses;
+    public Property(String sentName, String sentType, int sentTaxes[], int sentPurchaseCost, int sentHouseCost) {
+        this.name = sentName;
+        this.purchaseCost = sentPurchaseCost;
+        this.taxes[0] = sentTaxes[0];
+        this.taxes[1] = sentTaxes[1];
+        this.taxes[2] = sentTaxes[2];
+        this.taxes[3] = sentTaxes[3];
+        this.taxes[4] = sentTaxes[4];
+        this.taxes[5] = sentTaxes[5];
+        this.type = sentType;
+        this.houses = 0;
+        this.houseCost = sentHouseCost;
+        this.isOwned = false;
+        this.owner = -1;
     }
     
-    public void setPropOwned(boolean POwned) {
-        this.PropOwned = POwned;
+    public String getName() {
+        return this.name;
     }
-    public void setOwner(int CurrentOwner) {
-        this.Owner = CurrentOwner;
+    public int getPurchaseCost() {
+        return this.purchaseCost;
     }
-    public void setHouses(int PHouses) {
-        this.Houses = PHouses;
+    public int getTaxes() {
+        return this.taxes[this.houses];
+    }
+    public String getType() {
+        return this.type;
+    }
+    public boolean getIsOwned() {
+        return this.isOwned;
+    }
+    public int getOwner() {
+        return this.owner;
+    }
+    public int getHouseCost() {
+        return this.houseCost;
+    }
+    public int getHouses() {
+        return this.houses;
+    }
+    
+    public void setPropOwned(boolean sentOwned) {
+        this.isOwned = sentOwned;
+    }
+    public void setOwner(int sentOwner) {
+        this.owner = sentOwner;
+    }
+    public void setHouses(int sentHouses) {
+        this.houses = sentHouses;
     }
     
     /**
@@ -71,8 +70,8 @@ public class Property {
      * @return int - The cost of each house.
      */
     public int buyHouse() {
-        this.Houses += 1;
+        this.houses += 1;
         
-        return this.BuildingCost;
+        return this.houseCost;
     }
 }

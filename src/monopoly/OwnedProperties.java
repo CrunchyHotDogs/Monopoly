@@ -10,16 +10,16 @@ import javax.swing.JButton;
  * @Date December 3 2014
  */
 public class OwnedProperties extends javax.swing.JFrame {
-    ArrayList<Player> PlayerGroup;
-    Property[] BoardProperties;
+    ArrayList<Player> playerGroup;
+    Property[] boardProperties;
     
     /**
      * Creates new form OwnedProperties
      */
-    public OwnedProperties(ArrayList<Player> PG, Property[] BP) {
+    public OwnedProperties(ArrayList<Player> sentPlayerGroup, Property[] sentBoardProperties) {
         initComponents();
-        PlayerGroup = PG;
-        BoardProperties = BP;
+        playerGroup = sentPlayerGroup;
+        boardProperties = sentBoardProperties;
         
         refreshButtons();
     }
@@ -30,27 +30,27 @@ public class OwnedProperties extends javax.swing.JFrame {
      * @param PlayerToView The player's number that is being looked at.
      */
     public void displayProperties(int PlayerToView) {
-        String PropOwnedString = "";
-        int[] PropOwned = PlayerGroup.get(PlayerToView).GetLocationsOwned();
+        String propOwnedString = "";
+        int[] propOwned = playerGroup.get(PlayerToView).getLocationsOwned();
         
-        PropOwnedString += "<html>";
+        propOwnedString += "<html>";
         //Loops through all of the properties.
-        for (int i = 0; i < PropOwned.length; i++) {
+        for (int i = 0; i < propOwned.length; i++) {
             //Checks to see if the player owns the property.
-            if (PropOwned[i] == 1) {
-                if (BoardProperties[i].GetPropertyType().equals("RR")) {
-                    PropOwnedString += BoardProperties[i].GetPropertyName() + " Tax Amount - $" + BoardProperties[i].GetPropertyTax() * PlayerGroup.get(PlayerToView).GetRailroadMultiplier();
+            if (propOwned[i] == 1) {
+                if (boardProperties[i].getType().equals("RR")) {
+                    propOwnedString += boardProperties[i].getName() + " Tax Amount - $" + boardProperties[i].getTaxes() * playerGroup.get(PlayerToView).findRailroadMultiplier();
                 }
                 else {
-                    PropOwnedString += BoardProperties[i].GetPropertyName() + " Tax Amount - $" + BoardProperties[i].GetPropertyTax();
+                    propOwnedString += boardProperties[i].getName() + " Tax Amount - $" + boardProperties[i].getTaxes();
                 }
-                PropOwnedString += "<br/>";
+                propOwnedString += "<br/>";
             }
         }
-        PropOwnedString += "</html>";
+        propOwnedString += "</html>";
         
         //Output the properties that the player owns.
-        PropertiesOwnedLabel.setText(PropOwnedString);
+        PropertiesOwnedLabel.setText(propOwnedString);
     }
     
     /**
@@ -61,12 +61,12 @@ public class OwnedProperties extends javax.swing.JFrame {
         JButton[] arrayOfButtons = {PlayerOneButton, PlayerTwoButton, PlayerThreeButton, PlayerFourButton};
 
         //Hides all of the buttons not needed.
-        for (int i = 3; i >= PlayerGroup.size(); i--) {
+        for (int i = 3; i >= playerGroup.size(); i--) {
             arrayOfButtons[i].setVisible(false);
         }
         //Change all of the text of buttons being used.
-        for (int i = 0; i < PlayerGroup.size(); i++) {
-            arrayOfButtons[i].setText(PlayerGroup.get(i).GetPlayerName());
+        for (int i = 0; i < playerGroup.size(); i++) {
+            arrayOfButtons[i].setText(playerGroup.get(i).getName());
         }
     }
     
