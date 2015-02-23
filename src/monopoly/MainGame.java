@@ -748,7 +748,8 @@ public class MainGame extends javax.swing.JFrame {
         BuyPropertyLabel.setText("<html>" + playerGroup.get(currentPlayerTurn).GetPlayerName() + " has been sent to the " + boardProperties[10].GetPropertyName() + ".</html>");
         playerGroup.get(currentPlayer).GoToJail();
         clearSpaces(currentPlayer);
-        jailPosition.get(currentPlayer).setIcon(new ImageIcon(getClass().getResource(playerGroup.get(currentPlayer).GetPlayerImage())));
+        
+        jailPosition.get(currentPlayer).setIcon(new ImageIcon(playerGroup.get(currentPlayer).GetPlayerImage()));
     }
     
     
