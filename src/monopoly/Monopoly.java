@@ -6,7 +6,7 @@ package monopoly;
  * @date December 3 2014
  */
 public class Monopoly {
-    private static MainGame mainGame = null;
+    private static MonopolyBoard monopolyBoard = null;
     private static MusicPlayer musicPlayer = null;
     
     /**
@@ -20,21 +20,21 @@ public class Monopoly {
      * @param playerOwnedLabels The color that will display above a property if a player owns it.
      */
     public static void createMonopolyGame(int playerCount, String[] playerNames, String[] playerImages, String gameType, int startingGold, String[] playerOwnedLabels) {
-        mainGame = new MainGame(playerCount, playerNames, playerImages, gameType, startingGold, playerOwnedLabels);
-        mainGame.setVisible(true);
+        monopolyBoard = new MonopolyBoard(playerCount, playerNames, playerImages, gameType, startingGold, playerOwnedLabels);
+        monopolyBoard.setVisible(true);
     }
     
     /**
      * Updates the houses on the monopoly board.
      */
     public static void updateMonopolyHouses() {
-        mainGame.updateHousing();
-        mainGame.updateMoney();
+        monopolyBoard.updateHousing();
+        monopolyBoard.updateMoney();
     }
     
     public static void updatePropertiesOwned() {
-        mainGame.updatePropertiesOwned();
-        mainGame.updateMoney();
+        monopolyBoard.updatePropertiesOwned();
+        monopolyBoard.updateMoney();
     }
     
     public static boolean pauseMusic(boolean isMusicPlaying) {

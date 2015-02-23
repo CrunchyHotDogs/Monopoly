@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
  * @author c0621990 - Kyle Crossman
  * @date December 3 2014
  */
-public class MainGame extends javax.swing.JFrame {
+public class MonopolyBoard extends javax.swing.JFrame {
     private Property[] boardProperties = new Property[40];
     private JLabel[] propertiesOwned = new JLabel[40];
     private JLabel[] houseLabels = new JLabel[40];
@@ -27,12 +27,11 @@ public class MainGame extends javax.swing.JFrame {
     private ArrayList<JLabel> playerNameLabels = new ArrayList<>();
     private ArrayList<JLabel> playerMoney = new ArrayList<>();
     private ArrayList<Player> playerGroup = new ArrayList<>();
-    private int currentPlayerTurn = 0, peoplePlaying = 4, currentDiceRoll = 0, rollsInARow = 0, playerPurchasing = 0;
-    private String gameStyle = "";
-    private int startingMoney = 0;
     private OwnedProperties ownedProperties = null;
     private HomeBuyer homeBuyer = null;
     private BuySellProperties buySellProperties = null;
+    private int currentPlayerTurn = 0, peoplePlaying = 4, currentDiceRoll = 0, rollsInARow = 0, playerPurchasing = 0, startingMoney = 0;
+    private String gameStyle = "";
     private boolean isPlayingMusic = true;
     
     
@@ -44,7 +43,7 @@ public class MainGame extends javax.swing.JFrame {
      * @param GameType The type of property/board the player is playing on.
      * @param Money The starting money.
      */
-    public MainGame(int NumOfPlayers, String[] PlayerNames, String[] PlayerImages, String GameType, int Money, String[] PlayerOwnedImages) {
+    public MonopolyBoard(int NumOfPlayers, String[] PlayerNames, String[] PlayerImages, String GameType, int Money, String[] PlayerOwnedImages) {
         gameStyle = GameType; //Sets the global variable for the gameboard.
         startingMoney = Money;
         peoplePlaying = NumOfPlayers;
@@ -2757,14 +2756,15 @@ public class MainGame extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainGame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MonopolyBoard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainGame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MonopolyBoard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainGame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MonopolyBoard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainGame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MonopolyBoard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
