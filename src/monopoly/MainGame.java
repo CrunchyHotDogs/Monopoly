@@ -30,16 +30,16 @@ public class MainGame extends javax.swing.JFrame {
     private ChanceCard[] boardC = new ChanceCard[16];
     private ArrayList<JLabel[]> boardPositionLocation = new ArrayList<JLabel[]>();
     private ArrayList<JLabel> jailPosition = new ArrayList<JLabel>();
-    private ArrayList<JLabel> PlayerNameLabels = new ArrayList<JLabel>();
-    private ArrayList<JLabel> PlayerMoney = new ArrayList<JLabel>();
-    private ArrayList<Player> PlayerGroup = new ArrayList<Player>();
-    private int CurrentPlayerTurn = 0, PeoplePlaying = 4, CurrentDiceRoll = 0, RollsInARow = 0, PlayerPurchasing = 0;
-    private String GameStyle = "";
-    private int StartingMoney = 0;
+    private ArrayList<JLabel> playerNameLabels = new ArrayList<JLabel>();
+    private ArrayList<JLabel> playerMoney = new ArrayList<JLabel>();
+    private ArrayList<Player> playerGroup = new ArrayList<Player>();
+    private int currentPlayerTurn = 0, peoplePlaying = 4, currentDiceRoll = 0, rollsInARow = 0, playerPurchasing = 0;
+    private String gameStyle = "";
+    private int startingMoney = 0;
     private OwnedProperties op = null;
     private HomeBuyer hb = null;
     private BuySellProperties bsp = null;
-    private boolean IsPlayingMusic = true;
+    private boolean isPlayingMusic = true;
     
     
     /**
@@ -51,25 +51,32 @@ public class MainGame extends javax.swing.JFrame {
      * @param Money The starting money.
      */
     public MainGame(int NumOfPlayers, String[] PlayerNames, String[] PlayerImages, String GameType, int Money, String[] PlayerOwnedImages) {
-        GameStyle = GameType; //Sets the global variable for the gameboard.
-        StartingMoney = Money;
-        PeoplePlaying = NumOfPlayers;
+        gameStyle = GameType; //Sets the global variable for the gameboard.
+        startingMoney = Money;
+        peoplePlaying = NumOfPlayers;
         
         initComponents();
         createArray(); //Initialize every array needed for the game. Creates all of the objects needed.
         setPlayers(NumOfPlayers, PlayerNames, PlayerImages, PlayerOwnedImages); //Sets the player list.
         updateMoney(); //Updates the labels for money.
         
-        op = new OwnedProperties(PlayerGroup, boardProperties); //Creates a new owned properties object.
-        hb = new HomeBuyer(PlayerGroup, boardProperties); //Creates a new home buyer object.
-        bsp = new BuySellProperties(PlayerGroup, boardProperties);
-        GameBoard.setIcon(new ImageIcon("MonopolyInfo\\" + GameStyle +  "\\Gameboard.jpg")); //Sets the gameboard to which game is being played.
+        op = new OwnedProperties(playerGroup, boardProperties); //Creates a new owned properties object.
+        hb = new HomeBuyer(playerGroup, boardProperties); //Creates a new home buyer object.
+        bsp = new BuySellProperties(playerGroup, boardProperties);
         
-        if (!PlayerGroup.get(CurrentPlayerTurn).GetPlayerName().substring(PlayerGroup.get(CurrentPlayerTurn).GetPlayerName().length() - 1).equalsIgnoreCase("S")) {
-            PlayerTurnLabel.setText("<html>Currently " + PlayerGroup.get(CurrentPlayerTurn).GetPlayerName() + "'s turn.</html>"); //Say that it's the first players turn.
+        try {
+            GameBoard.setIcon(new ImageIcon("MonopolyInfo\\" + gameStyle +  "\\Gameboard.jpg")); //Sets the gameboard to which game is being played.
+        }
+        catch (Exception ex) {
+            
+        }
+        
+        //Makes the turn label have proper grammer.
+        if (!playerGroup.get(currentPlayerTurn).GetPlayerName().substring(playerGroup.get(currentPlayerTurn).GetPlayerName().length() - 1).equalsIgnoreCase("S")) {
+            PlayerTurnLabel.setText("<html>Currently " + playerGroup.get(currentPlayerTurn).GetPlayerName() + "'s turn.</html>"); //Say that it's the first players turn.
         }
         else {
-            PlayerTurnLabel.setText("<html>Currently " + PlayerGroup.get(CurrentPlayerTurn).GetPlayerName() + "' turn.</html>"); //Say that it's the first players turn.
+            PlayerTurnLabel.setText("<html>Currently " + playerGroup.get(currentPlayerTurn).GetPlayerName() + "' turn.</html>"); //Say that it's the first players turn.
         }       
     }
     
@@ -127,94 +134,94 @@ public class MainGame extends javax.swing.JFrame {
         rollDice = rollFirstDice + rollSecondDice;
         
         //Sets the dice images.
-        FirstDiceImageLabel.setIcon(new ImageIcon("MonopolyInfo\\" + GameStyle +  "\\Dice\\" + rollFirstDice + "Dice.png"));
-        SecondDiceImageLabel.setIcon(new ImageIcon("MonopolyInfo\\" + GameStyle +  "\\Dice\\" + rollSecondDice + "Dice.png"));
+        FirstDiceImageLabel.setIcon(new ImageIcon("MonopolyInfo\\" + gameStyle +  "\\Dice\\" + rollFirstDice + "Dice.png"));
+        SecondDiceImageLabel.setIcon(new ImageIcon("MonopolyInfo\\" + gameStyle +  "\\Dice\\" + rollSecondDice + "Dice.png"));
         
         //If the played is in jail.
-        if (PlayerGroup.get(CurrentPlayerTurn).IsJailed()) {
+        if (playerGroup.get(currentPlayerTurn).IsJailed()) {
             //Adds a turn to the time the player has been in jail.
-            PlayerGroup.get(CurrentPlayerTurn).StillInJail();
+            playerGroup.get(currentPlayerTurn).StillInJail();
             
             //Checks to see if the user rolled doubles.
             if (rollFirstDice == rollSecondDice) {
                 //The user leaves jail.
-                PlayerGroup.get(CurrentPlayerTurn).ExitJail();
+                playerGroup.get(currentPlayerTurn).ExitJail();
                 //Removes the image from jail.
-                jailPosition.get(CurrentPlayerTurn).setIcon(null);
+                jailPosition.get(currentPlayerTurn).setIcon(null);
             }
-            //If the player has been in jail for three turns, kick them out.
-            if (PlayerGroup.get(CurrentPlayerTurn).GetTurnsInJail() == 3) {
-                PlayerGroup.get(CurrentPlayerTurn).SubtractMoney(50);
-                PlayerGroup.get(CurrentPlayerTurn).ExitJail();
-                jailPosition.get(CurrentPlayerTurn).setIcon(null);
+            //If the player has been in jail for three turns, kick them out of jail.
+            if (playerGroup.get(currentPlayerTurn).GetTurnsInJail() == 3) {
+                playerGroup.get(currentPlayerTurn).SubtractMoney(50);
+                playerGroup.get(currentPlayerTurn).ExitJail();
+                jailPosition.get(currentPlayerTurn).setIcon(null);
             }
         }
         
         //Checks to see if the player is not in jail.
-        if (!PlayerGroup.get(CurrentPlayerTurn).IsJailed() && ((RollsInARow == 2 && rollFirstDice != rollSecondDice) || (RollsInARow != 2))) {
+        if (!playerGroup.get(currentPlayerTurn).IsJailed() && ((rollsInARow == 2 && rollFirstDice != rollSecondDice) || (rollsInARow != 2))) {
             //Sets a global variable to what the user rolled, used for utility taxes.
-            CurrentDiceRoll = rollDice;
+            currentDiceRoll = rollDice;
 
             //Clears all of the spaces for the certain player.
-            clearSpaces(CurrentPlayerTurn);
+            clearSpaces(currentPlayerTurn);
             //Checks to see if the player passed go.
-            if (PlayerGroup.get(CurrentPlayerTurn).SetPlayerLocation(rollDice).equals("YES")) {
-                TransactionLabel.setText(PlayerGroup.get(CurrentPlayerTurn).GetPlayerName() + " has passed go, receive $200.");
+            if (playerGroup.get(currentPlayerTurn).SetPlayerLocation(rollDice).equals("YES")) {
+                TransactionLabel.setText(playerGroup.get(currentPlayerTurn).GetPlayerName() + " has passed go, receive $200.");
             }
 
             //Sets the players current location to have their image.
-            setPlayerLocation(CurrentPlayerTurn, PlayerGroup.get(CurrentPlayerTurn).GetPlayerLocation(), PlayerGroup.get(CurrentPlayerTurn).GetPlayerImage());
+            setPlayerLocation(currentPlayerTurn, playerGroup.get(currentPlayerTurn).GetPlayerLocation(), playerGroup.get(currentPlayerTurn).GetPlayerImage());
 
-            currentLocation = PlayerGroup.get(CurrentPlayerTurn).GetPlayerLocation();
-            PlayerPurchasing = CurrentPlayerTurn;
+            currentLocation = playerGroup.get(currentPlayerTurn).GetPlayerLocation();
+            playerPurchasing = currentPlayerTurn;
             
             //A general label that tells the user where the player landed.
-            PlaceLandedLabel.setText("<html>" + PlayerGroup.get(CurrentPlayerTurn).GetPlayerName() + " has landed on " + boardProperties[currentLocation].GetPropertyName() + ".</html>");
+            PlaceLandedLabel.setText("<html>" + playerGroup.get(currentPlayerTurn).GetPlayerName() + " has landed on " + boardProperties[currentLocation].GetPropertyName() + ".</html>");
             //Performs different actions based on the type of space the user landed on.
             PerformSpaceAction(currentLocation);
         }
         
         
         //Finds which property type the player landed on. Used to keep the Pay Fine button disabled while a player is in jail and it is not their turn.
-        String PropertyType = boardProperties[PlayerGroup.get(CurrentPlayerTurn).GetPlayerLocation()].GetPropertyType();
-        currentLocation = PlayerGroup.get(CurrentPlayerTurn).GetPlayerLocation();
+        String PropertyType = boardProperties[playerGroup.get(currentPlayerTurn).GetPlayerLocation()].GetPropertyType();
+        currentLocation = playerGroup.get(currentPlayerTurn).GetPlayerLocation();
         
         //Checks to see if the dice rolls are not doubles.
         if (rollFirstDice != rollSecondDice) {
             //Increase the turn counter.
-            CurrentPlayerTurn += 1;
-            RollsInARow = 0;
+            currentPlayerTurn += 1;
+            rollsInARow = 0;
         }
         //Roll again.
         else {
             //Checks to see if the user has rolled to many times in a row.
-            if (RollsInARow == 2) {
+            if (rollsInARow == 2) {
                 //Sends them to jail. Resets the board and rolls in a row.
-                RollsInARow = 0;
-                GoToJail(CurrentPlayerTurn);
+                rollsInARow = 0;
+                GoToJail(currentPlayerTurn);
                 enableBoard();
                 PropertyNameLabel.setText("");
-                BuyPropertyLabel.setText("<html>" + PlayerGroup.get(CurrentPlayerTurn).GetPlayerName() + " has rolled three times in a row! Go right to the " + boardProperties[10].GetPropertyName() + ".</html>");
-                CurrentPlayerTurn += 1;
+                BuyPropertyLabel.setText("<html>" + playerGroup.get(currentPlayerTurn).GetPlayerName() + " has rolled three times in a row! Go right to the " + boardProperties[10].GetPropertyName() + ".</html>");
+                currentPlayerTurn += 1;
             }
             //If they are still rolling in a row.
             else {
-                RollsInARow += 1;
+                rollsInARow += 1;
             }
         }
         
         //Checks to see if the counter needs to go back to the first player.
-        if (CurrentPlayerTurn >= PeoplePlaying) {
-            CurrentPlayerTurn = 0;
+        if (currentPlayerTurn >= peoplePlaying) {
+            currentPlayerTurn = 0;
         }
         
         //Update the money labels.
         updateMoney();
         
         //Checks to see if the player is jailed. Also checks to see if the player before the jailed player is standing on a property they can purchase.
-        if (PlayerGroup.get(CurrentPlayerTurn).IsJailed() && (PropertyType.equals("P") && boardProperties[currentLocation].GetPropOwned() != false)) {
+        if (playerGroup.get(currentPlayerTurn).IsJailed() && (PropertyType.equals("P") && boardProperties[currentLocation].GetPropOwned() != false)) {
             //If the player has a get out of jail free card enable the button.
-            if (PlayerGroup.get(CurrentPlayerTurn).HasFreeJailCard()) {
+            if (playerGroup.get(currentPlayerTurn).HasFreeJailCard()) {
                 JailGetOutFreeButton.setEnabled(true);
             }
             JailPayFineButton.setEnabled(true);
@@ -225,7 +232,7 @@ public class MainGame extends javax.swing.JFrame {
         }
         
         //Says which player the turn belongs to.
-        PlayerTurnLabel.setText("Currently " + PlayerGroup.get(CurrentPlayerTurn).GetPlayerName() + " gets the next roll.");
+        PlayerTurnLabel.setText("Currently " + playerGroup.get(currentPlayerTurn).GetPlayerName() + " gets the next roll.");
     }
     
     /**
@@ -234,16 +241,16 @@ public class MainGame extends javax.swing.JFrame {
      * @param currentLocation The current location of the current player.
      */
     private void PerformSpaceAction(int currentLocation) {
-        String PropertyType = boardProperties[PlayerGroup.get(CurrentPlayerTurn).GetPlayerLocation()].GetPropertyType();
+        String PropertyType = boardProperties[playerGroup.get(currentPlayerTurn).GetPlayerLocation()].GetPropertyType();
         
         //Checks to see what type of space the player landed on.
         //Chance.
         if (PropertyType.equals("C")) {
-            chanceActive(CurrentPlayerTurn);
+            chanceActive(currentPlayerTurn);
         }
         //Community Chest.
         else if (PropertyType.equals("CC")) { 
-            communityChestActive(CurrentPlayerTurn);
+            communityChestActive(currentPlayerTurn);
         }
         //Free Parking.
         else if (PropertyType.equals("FP")) {
@@ -251,21 +258,21 @@ public class MainGame extends javax.swing.JFrame {
         }
         //Go.
         else if (PropertyType.equals("G")) {
-            InfoLabel.setText(PlayerGroup.get(CurrentPlayerTurn).GetPlayerName() + " has landed on go. Collect $200.");
+            InfoLabel.setText(playerGroup.get(currentPlayerTurn).GetPlayerName() + " has landed on go. Collect $200.");
         }
         //Go To Jail.
         else if (PropertyType.equals("GTJ")) {
-            GoToJail(CurrentPlayerTurn);
+            GoToJail(currentPlayerTurn);
         }
         //Income Tax.
         else if (PropertyType.equals("IT")) {
-            PlayerGroup.get(CurrentPlayerTurn).SubtractMoney(boardProperties[currentLocation].GetPropertyCost());
-            InfoLabel.setText("<html>" + PlayerGroup.get(CurrentPlayerTurn).GetPlayerName() + " has landed on " + boardProperties[currentLocation].GetPropertyName() + ". Pay $" + boardProperties[currentLocation].GetPropertyCost() + ".</html>");
+            playerGroup.get(currentPlayerTurn).SubtractMoney(boardProperties[currentLocation].GetPropertyCost());
+            InfoLabel.setText("<html>" + playerGroup.get(currentPlayerTurn).GetPlayerName() + " has landed on " + boardProperties[currentLocation].GetPropertyName() + ". Pay $" + boardProperties[currentLocation].GetPropertyCost() + ".</html>");
         }
         //Luxury Tax.
         else if (PropertyType.equals("LT")) {
-            PlayerGroup.get(CurrentPlayerTurn).SubtractMoney(boardProperties[currentLocation].GetPropertyCost());
-            InfoLabel.setText("<html>" + PlayerGroup.get(CurrentPlayerTurn).GetPlayerName() + " has landed on " + boardProperties[currentLocation].GetPropertyName() + ". Pay $" + boardProperties[currentLocation].GetPropertyCost() + ".</html>");
+            playerGroup.get(currentPlayerTurn).SubtractMoney(boardProperties[currentLocation].GetPropertyCost());
+            InfoLabel.setText("<html>" + playerGroup.get(currentPlayerTurn).GetPlayerName() + " has landed on " + boardProperties[currentLocation].GetPropertyName() + ". Pay $" + boardProperties[currentLocation].GetPropertyCost() + ".</html>");
         }
         //Property.
         else if (PropertyType.equals("P")) {
@@ -314,10 +321,10 @@ public class MainGame extends javax.swing.JFrame {
         int[] PropertiesOwned = new int[40];
         
         //Loops through the player list.
-        for (int i = 0; i < PlayerGroup.size(); i++) {
+        for (int i = 0; i < playerGroup.size(); i++) {
             //Checks to see if there money is below 0.
-            if (PlayerGroup.get(i).GetPlayerMoney() <= 0) {
-                PropertiesOwned = PlayerGroup.get(i).GetLocationsOwned();
+            if (playerGroup.get(i).GetPlayerMoney() <= 0) {
+                PropertiesOwned = playerGroup.get(i).GetLocationsOwned();
                 
                 //Loops through all of the properties.
                 for (int x = 0; x < PropertiesOwned.length; x++) {
@@ -338,36 +345,36 @@ public class MainGame extends javax.swing.JFrame {
                 
                 //Clear the board of all of this players images.
                 clearSpaces(i);
-                PlayerMoney.get(i).setText("");
-                InfoLabel.setText("<html>" + PlayerGroup.get(i).GetPlayerName() + " has lost.</html>");
+                playerMoney.get(i).setText("");
+                InfoLabel.setText("<html>" + playerGroup.get(i).GetPlayerName() + " has lost.</html>");
                 
                 //Subtrack the amount of people playing.
-                PeoplePlaying -= 1;
+                peoplePlaying -= 1;
                 
                 //Remove the player's characteristics from all the lists including the player.
-                PlayerGroup.remove(i);
+                playerGroup.remove(i);
                 boardPositionLocation.remove(i);
-                PlayerMoney.remove(i);
+                playerMoney.remove(i);
                 jailPosition.remove(i);
                 //Refresh the buttons on the Owner Properties board.
                 op.refreshButtons();
                 hb.refreshButtons();
                 
                 //Sets the turn to the next player.
-                if (CurrentPlayerTurn > 0) {
-                    CurrentPlayerTurn -= 1;
+                if (currentPlayerTurn > 0) {
+                    currentPlayerTurn -= 1;
                 }
             }
         }
         
         //Checks to see if a player has won. Show a JOptionPane if they have won and then close the game.
-        if (PeoplePlaying == 1) {
+        if (peoplePlaying == 1) {
             DiceRoll.setVisible(false);
             BuyPropertyButton.setVisible(false);
             DeclinePropertyButton.setVisible(false);
             JailGetOutFreeButton.setVisible(false);
             JailPayFineButton.setVisible(false);
-            JOptionPane.showMessageDialog(null, "We have a winner! The winner is " + PlayerGroup.get(0).GetPlayerName() + ".", "", JOptionPane.ERROR_MESSAGE); 
+            JOptionPane.showMessageDialog(null, "We have a winner! The winner is " + playerGroup.get(0).GetPlayerName() + ".", "", JOptionPane.ERROR_MESSAGE); 
             System.exit(0);
         }
     }
@@ -382,32 +389,32 @@ public class MainGame extends javax.swing.JFrame {
     private void buyProperty() {
         int currentLocation, currentPlayer;
         
-        currentPlayer = PlayerPurchasing;
+        currentPlayer = playerPurchasing;
         
-        currentLocation = PlayerGroup.get(currentPlayer).GetPlayerLocation();
+        currentLocation = playerGroup.get(currentPlayer).GetPlayerLocation();
         
         //Add the property to the players property owned array.
-        PlayerGroup.get(currentPlayer).BuyProperty(boardProperties[currentLocation].GetPropertyCost());
+        playerGroup.get(currentPlayer).BuyProperty(boardProperties[currentLocation].GetPropertyCost());
         //Sets the property to have an owner.
         boardProperties[currentLocation].setPropOwned(true);
         boardProperties[currentLocation].setOwner(currentPlayer);
         
         //Checks to see if the property is a railroad.
         if (boardProperties[currentLocation].GetPropertyType().equals("RR")) {
-            PlayerGroup.get(currentPlayer).BuyRailroad();
+            playerGroup.get(currentPlayer).BuyRailroad();
         }
         //Checks to see if the property is a utility.
         else if (boardProperties[currentLocation].GetPropertyType().equals("U")) {
-            PlayerGroup.get(currentPlayer).BuyUtility();
+            playerGroup.get(currentPlayer).BuyUtility();
         }
         
         //Show the user that a player has purchased a property.
-        InfoLabel.setText("<html>" + PlayerGroup.get(currentPlayer).GetPlayerName() +
+        InfoLabel.setText("<html>" + playerGroup.get(currentPlayer).GetPlayerName() +
                           " has purchased " + boardProperties[currentLocation].GetPropertyName() + 
                           " for $" + boardProperties[currentLocation].GetPropertyCost() + ".</html>");
         
         //Changed the owner label image to the player's color.
-        propertiesOwned[currentLocation].setIcon(new ImageIcon(getClass().getResource("/monopoly/Images/Player" + (PlayerGroup.get(currentPlayer).GetPlayerNumber() + 1) + "Owned.png")));
+        propertiesOwned[currentLocation].setIcon(new ImageIcon(getClass().getResource("/monopoly/Images/Player" + (playerGroup.get(currentPlayer).GetPlayerNumber() + 1) + "Owned.png")));
         enableBoard();
     }
     
@@ -419,18 +426,18 @@ public class MainGame extends javax.swing.JFrame {
     private void taxPlayer() {
         int currentLocation, currentPlayer;
         
-        currentPlayer = CurrentPlayerTurn;
+        currentPlayer = currentPlayerTurn;
             
-        currentLocation = PlayerGroup.get(currentPlayer).GetPlayerLocation();
+        currentLocation = playerGroup.get(currentPlayer).GetPlayerLocation();
         
         //Subtrack from the player the amount stored in the property object.
-        PlayerGroup.get(currentPlayer).SubtractMoney(boardProperties[currentLocation].GetPropertyTax());
-        PlayerGroup.get(boardProperties[currentLocation].GetOwner()).IncreaseMoney(boardProperties[currentLocation].GetPropertyTax());
+        playerGroup.get(currentPlayer).SubtractMoney(boardProperties[currentLocation].GetPropertyTax());
+        playerGroup.get(boardProperties[currentLocation].GetOwner()).IncreaseMoney(boardProperties[currentLocation].GetPropertyTax());
         
         //Inform the user of how much the player was taxed.
-        TransactionLabel.setText("<html>" + PlayerGroup.get(currentPlayer).GetPlayerName() +
+        TransactionLabel.setText("<html>" + playerGroup.get(currentPlayer).GetPlayerName() +
                           " has lost $" + boardProperties[currentLocation].GetPropertyTax() + ".<br/>" +
-                          "" + PlayerGroup.get(boardProperties[currentLocation].GetOwner()).GetPlayerName() +
+                          "" + playerGroup.get(boardProperties[currentLocation].GetOwner()).GetPlayerName() +
                           " has gained $" + boardProperties[currentLocation].GetPropertyTax() + "</html>");
         updateMoney();
     }
@@ -444,19 +451,19 @@ public class MainGame extends javax.swing.JFrame {
     private void taxPlayerRailroad() {
         int currentLocation, currentPlayer;
         
-        currentPlayer = CurrentPlayerTurn;
+        currentPlayer = currentPlayerTurn;
             
-        currentLocation = PlayerGroup.get(currentPlayer).GetPlayerLocation();
+        currentLocation = playerGroup.get(currentPlayer).GetPlayerLocation();
         
         //Subtract money from the player based on a railroad equation.
-        PlayerGroup.get(currentPlayer).SubtractMoney(boardProperties[currentLocation].GetPropertyTax() * PlayerGroup.get(boardProperties[currentLocation].GetOwner()).GetRailroadMultiplier());
-        PlayerGroup.get(boardProperties[currentLocation].GetOwner()).IncreaseMoney(boardProperties[currentLocation].GetPropertyTax() * PlayerGroup.get(boardProperties[currentLocation].GetOwner()).GetRailroadMultiplier());
+        playerGroup.get(currentPlayer).SubtractMoney(boardProperties[currentLocation].GetPropertyTax() * playerGroup.get(boardProperties[currentLocation].GetOwner()).GetRailroadMultiplier());
+        playerGroup.get(boardProperties[currentLocation].GetOwner()).IncreaseMoney(boardProperties[currentLocation].GetPropertyTax() * playerGroup.get(boardProperties[currentLocation].GetOwner()).GetRailroadMultiplier());
         
         //Inform the user about money lost and gained.
-        TransactionLabel.setText("<html>" + PlayerGroup.get(currentPlayer).GetPlayerName() +
-                          " has lost $" + boardProperties[currentLocation].GetPropertyTax() * PlayerGroup.get(boardProperties[currentLocation].GetOwner()).GetRailroadMultiplier() + ".<br/>" +
-                          "" + PlayerGroup.get(boardProperties[currentLocation].GetOwner()).GetPlayerName() +
-                          " has gained $" + boardProperties[currentLocation].GetPropertyTax() * PlayerGroup.get(boardProperties[currentLocation].GetOwner()).GetRailroadMultiplier() + "</html>");
+        TransactionLabel.setText("<html>" + playerGroup.get(currentPlayer).GetPlayerName() +
+                          " has lost $" + boardProperties[currentLocation].GetPropertyTax() * playerGroup.get(boardProperties[currentLocation].GetOwner()).GetRailroadMultiplier() + ".<br/>" +
+                          "" + playerGroup.get(boardProperties[currentLocation].GetOwner()).GetPlayerName() +
+                          " has gained $" + boardProperties[currentLocation].GetPropertyTax() * playerGroup.get(boardProperties[currentLocation].GetOwner()).GetRailroadMultiplier() + "</html>");
         updateMoney();
     }
     
@@ -469,19 +476,19 @@ public class MainGame extends javax.swing.JFrame {
     private void taxPlayerUtility() {
         int currentLocation, currentPlayer;
         
-        currentPlayer = CurrentPlayerTurn;
+        currentPlayer = currentPlayerTurn;
             
-        currentLocation = PlayerGroup.get(currentPlayer).GetPlayerLocation();
+        currentLocation = playerGroup.get(currentPlayer).GetPlayerLocation();
         
         //Subtracts money from the player based on an utility equation.
-        PlayerGroup.get(currentPlayer).SubtractMoney(CurrentDiceRoll * PlayerGroup.get(boardProperties[currentLocation].GetOwner()).GetUtilityMultiplier());
-        PlayerGroup.get(boardProperties[currentLocation].GetOwner()).IncreaseMoney(CurrentDiceRoll * PlayerGroup.get(boardProperties[currentLocation].GetOwner()).GetUtilityMultiplier());
+        playerGroup.get(currentPlayer).SubtractMoney(currentDiceRoll * playerGroup.get(boardProperties[currentLocation].GetOwner()).GetUtilityMultiplier());
+        playerGroup.get(boardProperties[currentLocation].GetOwner()).IncreaseMoney(currentDiceRoll * playerGroup.get(boardProperties[currentLocation].GetOwner()).GetUtilityMultiplier());
         
         //Inform the user about money lost and gained.
-        TransactionLabel.setText("<html>" + PlayerGroup.get(currentPlayer).GetPlayerName() +
-                          " has lost $" + CurrentDiceRoll * PlayerGroup.get(boardProperties[currentLocation].GetOwner()).GetUtilityMultiplier() + ".<br/>" +
-                          "" + PlayerGroup.get(boardProperties[currentLocation].GetOwner()).GetPlayerName() +
-                          " has gained $" + CurrentDiceRoll * PlayerGroup.get(boardProperties[currentLocation].GetOwner()).GetUtilityMultiplier() + "</html>");
+        TransactionLabel.setText("<html>" + playerGroup.get(currentPlayer).GetPlayerName() +
+                          " has lost $" + currentDiceRoll * playerGroup.get(boardProperties[currentLocation].GetOwner()).GetUtilityMultiplier() + ".<br/>" +
+                          "" + playerGroup.get(boardProperties[currentLocation].GetOwner()).GetPlayerName() +
+                          " has gained $" + currentDiceRoll * playerGroup.get(boardProperties[currentLocation].GetOwner()).GetUtilityMultiplier() + "</html>");
         updateMoney();
     }
     
@@ -494,8 +501,8 @@ public class MainGame extends javax.swing.JFrame {
         //Checks to see if any player has lost.
         playerLose();
         //Changes the labels of people playing.
-        for (int i = 0; i < PlayerGroup.size(); i++) {
-            PlayerMoney.get(i).setText("$" + PlayerGroup.get(i).GetPlayerMoney());
+        for (int i = 0; i < playerGroup.size(); i++) {
+            playerMoney.get(i).setText("$" + playerGroup.get(i).GetPlayerMoney());
         }
     }
     
@@ -508,8 +515,8 @@ public class MainGame extends javax.swing.JFrame {
         JailPayFineButton.setEnabled(false);
         BuyPropertyButton.setEnabled(true);
         DeclinePropertyButton.setEnabled(true);
-        BuyPropertyLabel.setText("<html>Would you like to purchase this property, " + PlayerGroup.get(CurrentPlayerTurn).GetPlayerName() + "?</html>" );
-        PropertyNameLabel.setText("<html>" + boardProperties[PlayerGroup.get(CurrentPlayerTurn).GetPlayerLocation()].GetPropertyName() + " for $" + boardProperties[PlayerGroup.get(CurrentPlayerTurn).GetPlayerLocation()].GetPropertyCost() + "</html>");
+        BuyPropertyLabel.setText("<html>Would you like to purchase this property, " + playerGroup.get(currentPlayerTurn).GetPlayerName() + "?</html>" );
+        PropertyNameLabel.setText("<html>" + boardProperties[playerGroup.get(currentPlayerTurn).GetPlayerLocation()].GetPropertyName() + " for $" + boardProperties[playerGroup.get(currentPlayerTurn).GetPlayerLocation()].GetPropertyCost() + "</html>");
     }
     
     /**
@@ -522,7 +529,7 @@ public class MainGame extends javax.swing.JFrame {
      */
     public int taxForHouses(int HouseTax, int HotelTax, int CurrentPlayer) {
         int MoneyToTax = 0;
-        int[] OwnedProperties = PlayerGroup.get(CurrentPlayer).GetLocationsOwned();
+        int[] OwnedProperties = playerGroup.get(CurrentPlayer).GetLocationsOwned();
             
             //Loops through the properties list from the player.
             for (int i = 0; i < OwnedProperties.length; i++) {
@@ -559,21 +566,21 @@ public class MainGame extends javax.swing.JFrame {
         
         //Decide which community chest card was picked. Refer to CommunityChest.txt for individual results.
         if (CCType.equals("A")) {
-            PlayerGroup.get(CurrentPlayer).SendPlayerToGo();
+            playerGroup.get(CurrentPlayer).SendPlayerToGo();
             clearSpaces(CurrentPlayer);
-            setPlayerLocation(CurrentPlayer, PlayerGroup.get(CurrentPlayerTurn).GetPlayerLocation(), PlayerGroup.get(CurrentPlayerTurn).GetPlayerImage());
+            setPlayerLocation(CurrentPlayer, playerGroup.get(currentPlayerTurn).GetPlayerLocation(), playerGroup.get(currentPlayerTurn).GetPlayerImage());
         }
         else if (CCType.equals("B")) {
-            PlayerGroup.get(CurrentPlayer).IncreaseMoney(200);
+            playerGroup.get(CurrentPlayer).IncreaseMoney(200);
         }
         else if (CCType.equals("C")) {
-            PlayerGroup.get(CurrentPlayer).SubtractMoney(50);
+            playerGroup.get(CurrentPlayer).SubtractMoney(50);
         }
         else if (CCType.equals("D")) {
-            PlayerGroup.get(CurrentPlayer).IncreaseMoney(50);
+            playerGroup.get(CurrentPlayer).IncreaseMoney(50);
         }
         else if (CCType.equals("E")) { 
-            PlayerGroup.get(CurrentPlayer).AwardFreeJailCard();
+            playerGroup.get(CurrentPlayer).AwardFreeJailCard();
         }
         else if (CCType.equals("F")) {
             GoToJail(CurrentPlayer);
@@ -582,41 +589,41 @@ public class MainGame extends javax.swing.JFrame {
             recursiveReduceMoney(50, CurrentPlayer, 0);
         }
         else if (CCType.equals("H")) {
-            PlayerGroup.get(CurrentPlayer).IncreaseMoney(100);
+            playerGroup.get(CurrentPlayer).IncreaseMoney(100);
         }
         else if (CCType.equals("I")) {
-            PlayerGroup.get(CurrentPlayer).IncreaseMoney(20);
+            playerGroup.get(CurrentPlayer).IncreaseMoney(20);
         }
         else if (CCType.equals("J")) {
             recursiveReduceMoney(10, CurrentPlayer, 0);
         }
         else if (CCType.equals("K")) {
-            PlayerGroup.get(CurrentPlayer).IncreaseMoney(100);
+            playerGroup.get(CurrentPlayer).IncreaseMoney(100);
         }
         else if (CCType.equals("L")) {
-            PlayerGroup.get(CurrentPlayer).SubtractMoney(100);
+            playerGroup.get(CurrentPlayer).SubtractMoney(100);
         }
         else if (CCType.equals("M")) {
-            PlayerGroup.get(CurrentPlayer).SubtractMoney(150);
+            playerGroup.get(CurrentPlayer).SubtractMoney(150);
         }
         else if (CCType.equals("N")) {
-            PlayerGroup.get(CurrentPlayer).IncreaseMoney(25);
+            playerGroup.get(CurrentPlayer).IncreaseMoney(25);
         }
         else if (CCType.equals("O")) {
             int AmountToTax = taxForHouses(25, 115, CurrentPlayer);
-            PlayerGroup.get(CurrentPlayer).SubtractMoney(AmountToTax);
-            TransactionLabel.setText(PlayerGroup.get(CurrentPlayer).GetPlayerName() + " has been taxed $" + AmountToTax);
+            playerGroup.get(CurrentPlayer).SubtractMoney(AmountToTax);
+            TransactionLabel.setText(playerGroup.get(CurrentPlayer).GetPlayerName() + " has been taxed $" + AmountToTax);
         }
         else if (CCType.equals("P")) {
-            PlayerGroup.get(CurrentPlayer).IncreaseMoney(10);
+            playerGroup.get(CurrentPlayer).IncreaseMoney(10);
         }
         else if (CCType.equals("Q")) {
-            PlayerGroup.get(CurrentPlayer).IncreaseMoney(100);
+            playerGroup.get(CurrentPlayer).IncreaseMoney(100);
         }
         
         
         InfoString = boardCC[CCCard].GetCCOutputText();
-        InfoString = InfoString.replace("[PLAYER_NAME]", PlayerGroup.get(CurrentPlayer).GetPlayerName());
+        InfoString = InfoString.replace("[PLAYER_NAME]", playerGroup.get(CurrentPlayer).GetPlayerName());
         InfoString = InfoString.replace("[DESCRIPTION]", boardCC[CCCard].GetCCDescription());
 
         CardLabel.setText(InfoString);
@@ -638,9 +645,9 @@ public class MainGame extends javax.swing.JFrame {
         
         //Dfferent actions for each chance card. See MonopolyInfo/SPECIFIC GAME TYPE/Chance.txt for individual results.
         if (CType.equals("A")) {
-            PlayerGroup.get(CurrentPlayer).SendPlayerToGo();
+            playerGroup.get(CurrentPlayer).SendPlayerToGo();
             clearSpaces(CurrentPlayer);
-            setPlayerLocation(CurrentPlayer, PlayerGroup.get(CurrentPlayerTurn).GetPlayerLocation(), PlayerGroup.get(CurrentPlayerTurn).GetPlayerImage());
+            setPlayerLocation(CurrentPlayer, playerGroup.get(currentPlayerTurn).GetPlayerLocation(), playerGroup.get(currentPlayerTurn).GetPlayerImage());
         }
         else if (CType.equals("B")) {
             MoveToSpecificLocation(24, CurrentPlayer, "Normal");
@@ -651,13 +658,13 @@ public class MainGame extends javax.swing.JFrame {
         else if (CType.equals("D")) {
             int PlayerLocation;
             
-            if (PlayerGroup.get(CurrentPlayer).SendPlayerToUtility().equals("YES")) {
-                InfoLabel.setText("<html>" + PlayerGroup.get(CurrentPlayer).GetPlayerName() + " has passed go, receive $200.</html>");
+            if (playerGroup.get(CurrentPlayer).SendPlayerToUtility().equals("YES")) {
+                InfoLabel.setText("<html>" + playerGroup.get(CurrentPlayer).GetPlayerName() + " has passed go, receive $200.</html>");
             }
             clearSpaces(CurrentPlayer);
-            setPlayerLocation(CurrentPlayer, PlayerGroup.get(CurrentPlayerTurn).GetPlayerLocation(), PlayerGroup.get(CurrentPlayerTurn).GetPlayerImage());
+            setPlayerLocation(CurrentPlayer, playerGroup.get(currentPlayerTurn).GetPlayerLocation(), playerGroup.get(currentPlayerTurn).GetPlayerImage());
             
-            PlayerLocation = PlayerGroup.get(CurrentPlayer).GetPlayerLocation();
+            PlayerLocation = playerGroup.get(CurrentPlayer).GetPlayerLocation();
             if (boardProperties[PlayerLocation].GetPropOwned() == false) {
                 buyPropertyEnable();
             }
@@ -668,13 +675,13 @@ public class MainGame extends javax.swing.JFrame {
         else if (CType.equals("E")) {
             int PlayerLocation;
             
-            if (PlayerGroup.get(CurrentPlayer).SendPlayerToRailroad().equals("YES")) {
-                TransactionLabel.setText(PlayerGroup.get(CurrentPlayer).GetPlayerName() + " has passed go, receive $200.");
+            if (playerGroup.get(CurrentPlayer).SendPlayerToRailroad().equals("YES")) {
+                TransactionLabel.setText(playerGroup.get(CurrentPlayer).GetPlayerName() + " has passed go, receive $200.");
             }
             clearSpaces(CurrentPlayer);
-            setPlayerLocation(CurrentPlayer, PlayerGroup.get(CurrentPlayerTurn).GetPlayerLocation(), PlayerGroup.get(CurrentPlayerTurn).GetPlayerImage());
+            setPlayerLocation(CurrentPlayer, playerGroup.get(currentPlayerTurn).GetPlayerLocation(), playerGroup.get(currentPlayerTurn).GetPlayerImage());
             
-            PlayerLocation = PlayerGroup.get(CurrentPlayer).GetPlayerLocation();
+            PlayerLocation = playerGroup.get(CurrentPlayer).GetPlayerLocation();
             if (boardProperties[PlayerLocation].GetPropOwned() == false) {
                 buyPropertyEnable();
             }
@@ -683,19 +690,19 @@ public class MainGame extends javax.swing.JFrame {
             }
         }
         else if (CType.equals("F")) {
-            PlayerGroup.get(CurrentPlayer).IncreaseMoney(50);
+            playerGroup.get(CurrentPlayer).IncreaseMoney(50);
         }
         else if (CType.equals("G")) {
-            PlayerGroup.get(CurrentPlayer).AwardFreeJailCard();
+            playerGroup.get(CurrentPlayer).AwardFreeJailCard();
         }
         else if (CType.equals("H")) {
             int PlayerLocation;
             
-            PlayerGroup.get(CurrentPlayer).SetPlayerLocation(-3);
+            playerGroup.get(CurrentPlayer).SetPlayerLocation(-3);
             clearSpaces(CurrentPlayer);
-            setPlayerLocation(CurrentPlayer, PlayerGroup.get(CurrentPlayerTurn).GetPlayerLocation(), PlayerGroup.get(CurrentPlayerTurn).GetPlayerImage());
+            setPlayerLocation(CurrentPlayer, playerGroup.get(currentPlayerTurn).GetPlayerLocation(), playerGroup.get(currentPlayerTurn).GetPlayerImage());
             
-            PlayerLocation = PlayerGroup.get(CurrentPlayer).GetPlayerLocation();
+            PlayerLocation = playerGroup.get(CurrentPlayer).GetPlayerLocation();
             
             PerformSpaceAction(PlayerLocation);
         }
@@ -704,11 +711,11 @@ public class MainGame extends javax.swing.JFrame {
         }
         else if (CType.equals("J")) {
             int AmountToTax = taxForHouses(25, 100, CurrentPlayer);
-            PlayerGroup.get(CurrentPlayer).SubtractMoney(AmountToTax);
-            TransactionLabel.setText(PlayerGroup.get(CurrentPlayer).GetPlayerName() + " has been taxed $" + AmountToTax);
+            playerGroup.get(CurrentPlayer).SubtractMoney(AmountToTax);
+            TransactionLabel.setText(playerGroup.get(CurrentPlayer).GetPlayerName() + " has been taxed $" + AmountToTax);
         }
         else if (CType.equals("K")) {
-            PlayerGroup.get(CurrentPlayer).SubtractMoney(15);
+            playerGroup.get(CurrentPlayer).SubtractMoney(15);
         }
         else if (CType.equals("L")) {
             MoveToSpecificLocation(5, CurrentPlayer, "Railroad");
@@ -720,14 +727,14 @@ public class MainGame extends javax.swing.JFrame {
             recursiveReduceMoney(-50, CurrentPlayer, 0);
         }
         else if (CType.equals("P")) {
-            PlayerGroup.get(CurrentPlayer).IncreaseMoney(150);
+            playerGroup.get(CurrentPlayer).IncreaseMoney(150);
         }
         else if (CType.equals("Q")) {
-            PlayerGroup.get(CurrentPlayer).IncreaseMoney(100);
+            playerGroup.get(CurrentPlayer).IncreaseMoney(100);
         }
 
         InfoString = boardC[CCard].GetCOutputText();
-        InfoString = InfoString.replace("[PLAYER_NAME]", PlayerGroup.get(CurrentPlayer).GetPlayerName());
+        InfoString = InfoString.replace("[PLAYER_NAME]", playerGroup.get(CurrentPlayer).GetPlayerName());
         InfoString = InfoString.replace("[DESCRIPTION]", boardC[CCard].GetCDescription());
 
         CardLabel.setText(InfoString);
@@ -743,10 +750,10 @@ public class MainGame extends javax.swing.JFrame {
      */
     private void GoToJail(int CurrentPlayer) {
         PropertyNameLabel.setText("");
-        BuyPropertyLabel.setText("<html>" + PlayerGroup.get(CurrentPlayerTurn).GetPlayerName() + " has been sent to the " + boardProperties[10].GetPropertyName() + ".</html>");
-        PlayerGroup.get(CurrentPlayer).GoToJail();
+        BuyPropertyLabel.setText("<html>" + playerGroup.get(currentPlayerTurn).GetPlayerName() + " has been sent to the " + boardProperties[10].GetPropertyName() + ".</html>");
+        playerGroup.get(CurrentPlayer).GoToJail();
         clearSpaces(CurrentPlayer);
-        jailPosition.get(CurrentPlayer).setIcon(new ImageIcon(getClass().getResource(PlayerGroup.get(CurrentPlayer).GetPlayerImage())));
+        jailPosition.get(CurrentPlayer).setIcon(new ImageIcon(getClass().getResource(playerGroup.get(CurrentPlayer).GetPlayerImage())));
     }
     
     /**
@@ -754,10 +761,10 @@ public class MainGame extends javax.swing.JFrame {
      * , removes their player from jail.
      */
     private void PayFineJail() {
-        PlayerGroup.get(CurrentPlayerTurn).SubtractMoney(50);
-        jailPosition.get(CurrentPlayerTurn).setIcon(null);
-        PlayerGroup.get(CurrentPlayerTurn).ExitJail();
-        InfoLabel.setText("<html>" + PlayerGroup.get(CurrentPlayerTurn).GetPlayerName() + " has payed their fines. They may walk free.</html>");
+        playerGroup.get(currentPlayerTurn).SubtractMoney(50);
+        jailPosition.get(currentPlayerTurn).setIcon(null);
+        playerGroup.get(currentPlayerTurn).ExitJail();
+        InfoLabel.setText("<html>" + playerGroup.get(currentPlayerTurn).GetPlayerName() + " has payed their fines. They may walk free.</html>");
     }
     
     /**
@@ -765,9 +772,9 @@ public class MainGame extends javax.swing.JFrame {
      * Removes the player from jail with no penalties.
      */
     private void GetOutFree() {
-        jailPosition.get(CurrentPlayerTurn).setIcon(null);
-        PlayerGroup.get(CurrentPlayerTurn).ExitJail();
-        InfoLabel.setText("<html>" + PlayerGroup.get(CurrentPlayerTurn).GetPlayerName() + " has used their free jail card. Lucky you!</html>");
+        jailPosition.get(currentPlayerTurn).setIcon(null);
+        playerGroup.get(currentPlayerTurn).ExitJail();
+        InfoLabel.setText("<html>" + playerGroup.get(currentPlayerTurn).GetPlayerName() + " has used their free jail card. Lucky you!</html>");
     }
     
     /**
@@ -779,12 +786,12 @@ public class MainGame extends javax.swing.JFrame {
      */
     private void MoveToSpecificLocation(int LocationNumber, int CurrentPlayer, String PropType) {
             //Moves the player to a specific property, checks to see if they passed go.
-            if (PlayerGroup.get(CurrentPlayer).SendPlayerToSpecific(LocationNumber).equals("YES")) {
-                TransactionLabel.setText(PlayerGroup.get(CurrentPlayer).GetPlayerName() + " has passed go, receive $200.");
+            if (playerGroup.get(CurrentPlayer).SendPlayerToSpecific(LocationNumber).equals("YES")) {
+                TransactionLabel.setText(playerGroup.get(CurrentPlayer).GetPlayerName() + " has passed go, receive $200.");
             }
             
             clearSpaces(CurrentPlayer);
-            setPlayerLocation(CurrentPlayer, PlayerGroup.get(CurrentPlayerTurn).GetPlayerLocation(), PlayerGroup.get(CurrentPlayerTurn).GetPlayerImage());
+            setPlayerLocation(CurrentPlayer, playerGroup.get(currentPlayerTurn).GetPlayerLocation(), playerGroup.get(currentPlayerTurn).GetPlayerImage());
             
             //Checks to see if the property is owned.
             if (boardProperties[LocationNumber].GetPropOwned() == false) {
@@ -813,12 +820,12 @@ public class MainGame extends javax.swing.JFrame {
         //Makes sure the money does not get reduced from the player gaining money.
         if (CurrentPlayer != PlayerToReduce) {
             //Subtract money from each player that isn't gaining money. Gives money to the player gaining money.
-            PlayerGroup.get(PlayerToReduce).SubtractMoney(MoneyToTake);
-            PlayerGroup.get(CurrentPlayer).IncreaseMoney(MoneyToTake);
+            playerGroup.get(PlayerToReduce).SubtractMoney(MoneyToTake);
+            playerGroup.get(CurrentPlayer).IncreaseMoney(MoneyToTake);
         }
         
         //Checks to see if the recursive function has been through each player.
-        if (PlayerToReduce < PeoplePlaying - 1) {
+        if (PlayerToReduce < peoplePlaying - 1) {
             recursiveReduceMoney(MoneyToTake, CurrentPlayer, PlayerToReduce + 1);
         }
     }
@@ -860,8 +867,8 @@ public class MainGame extends javax.swing.JFrame {
         
         ImageIcon[] OwnerLabels = {null, null, null, null};
         
-        for (int i = 0; i < PlayerGroup.size(); i++) {
-            OwnerLabels[i] = new ImageIcon(getClass().getResource(PlayerGroup.get(i).GetPlayerOwnedImage()));
+        for (int i = 0; i < playerGroup.size(); i++) {
+            OwnerLabels[i] = new ImageIcon(getClass().getResource(playerGroup.get(i).GetPlayerOwnedImage()));
         }
         
         for (int i = 0; i < propertiesOwned.length; i++) {
@@ -870,8 +877,8 @@ public class MainGame extends javax.swing.JFrame {
             }
         }
         
-        for (int i = 0; i < PlayerGroup.size(); i++) {
-            PropertiesOwned = PlayerGroup.get(i).GetLocationsOwned();
+        for (int i = 0; i < playerGroup.size(); i++) {
+            PropertiesOwned = playerGroup.get(i).GetLocationsOwned();
             
             for (int x = 0; x < PropertiesOwned.length; x++) {
                 if (PropertiesOwned[x] == 1) {
@@ -886,8 +893,8 @@ public class MainGame extends javax.swing.JFrame {
      * Update the money of the players.
      */
     private void enableBoard() {
-        if (PlayerGroup.get(CurrentPlayerTurn).IsJailed()) {
-            if (PlayerGroup.get(CurrentPlayerTurn).HasFreeJailCard()) {
+        if (playerGroup.get(currentPlayerTurn).IsJailed()) {
+            if (playerGroup.get(currentPlayerTurn).HasFreeJailCard()) {
                 JailGetOutFreeButton.setEnabled(true);
             }
             JailPayFineButton.setEnabled(true);
@@ -911,13 +918,13 @@ public class MainGame extends javax.swing.JFrame {
      */
     private void setPlayers(int NumOfPlayers, String[] PlayerNames, String[] PlayerImages, String[] OwnerLabels) {
         for (int i = 0; i < NumOfPlayers; i++) {
-            PlayerGroup.add(new Player(i, StartingMoney, PlayerNames[i], PlayerImages[i], OwnerLabels[i]));
-            setPlayerLocation(i, 0, PlayerGroup.get(i).GetPlayerImage());
-            if (!PlayerGroup.get(i).GetPlayerName().substring(PlayerGroup.get(i).GetPlayerName().length() - 1).equalsIgnoreCase("S")) {
-                PlayerNameLabels.get(i).setText("<html>" + PlayerGroup.get(i).GetPlayerName() + "'s Money</html>");
+            playerGroup.add(new Player(i, startingMoney, PlayerNames[i], PlayerImages[i], OwnerLabels[i]));
+            setPlayerLocation(i, 0, playerGroup.get(i).GetPlayerImage());
+            if (!playerGroup.get(i).GetPlayerName().substring(playerGroup.get(i).GetPlayerName().length() - 1).equalsIgnoreCase("S")) {
+                playerNameLabels.get(i).setText("<html>" + playerGroup.get(i).GetPlayerName() + "'s Money</html>");
             }
             else {
-                PlayerNameLabels.get(i).setText("<html>" + PlayerGroup.get(i).GetPlayerName() + "' Money</html>");
+                playerNameLabels.get(i).setText("<html>" + playerGroup.get(i).GetPlayerName() + "' Money</html>");
             }
         }    
     }
@@ -934,7 +941,7 @@ public class MainGame extends javax.swing.JFrame {
         Scanner FileScan = null;
         
         try {
-       	    FileName = "MonopolyInfo\\" + GameStyle + "\\Properties.txt";
+       	    FileName = "MonopolyInfo\\" + gameStyle + "\\Properties.txt";
        	    FileScan = new Scanner(new File(FileName)); //Sets the file to a variable so the program can read it.
          }
          catch(FileNotFoundException exception) {  //If their is no file by the right name, it will tell the user the file was not found.
@@ -995,7 +1002,7 @@ public class MainGame extends javax.swing.JFrame {
          
         //Adds all of the community chest cards into an array.
         try { 
-       	    FileName = "MonopolyInfo\\" + GameStyle + "\\CommunityChest.txt";
+       	    FileName = "MonopolyInfo\\" + gameStyle + "\\CommunityChest.txt";
        	    FileScan = new Scanner(new File(FileName)); //Sets the file to a variable so the program can read it.
         }
         catch(FileNotFoundException exception) {  //If their is no file by the right name, it will tell the user the file was not found.
@@ -1051,7 +1058,7 @@ public class MainGame extends javax.swing.JFrame {
          
         //Adds all of the community chest cards into an array.
         try { 
-       	    FileName = "MonopolyInfo\\" + GameStyle + "\\Chance.txt";
+       	    FileName = "MonopolyInfo\\" + gameStyle + "\\Chance.txt";
        	    FileScan = new Scanner(new File(FileName)); //Sets the file to a variable so the program can read it.
         }
         catch(FileNotFoundException exception) {  //If their is no file by the right name, it will tell the user the file was not found.
@@ -1100,15 +1107,15 @@ public class MainGame extends javax.swing.JFrame {
             }
         } 
          
-        PlayerMoney.add(PlayerOneMoneyLabel);
-        PlayerMoney.add(PlayerTwoMoneyLabel);
-        PlayerMoney.add(PlayerThreeMoneyLabel);
-        PlayerMoney.add(PlayerFourMoneyLabel);
+        playerMoney.add(PlayerOneMoneyLabel);
+        playerMoney.add(PlayerTwoMoneyLabel);
+        playerMoney.add(PlayerThreeMoneyLabel);
+        playerMoney.add(PlayerFourMoneyLabel);
          
-        PlayerNameLabels.add(PlayerOneInfoLabel);
-        PlayerNameLabels.add(PlayerTwoInfoLabel);
-        PlayerNameLabels.add(PlayerThreeInfoLabel);
-        PlayerNameLabels.add(PlayerFourInfoLabel);
+        playerNameLabels.add(PlayerOneInfoLabel);
+        playerNameLabels.add(PlayerTwoInfoLabel);
+        playerNameLabels.add(PlayerThreeInfoLabel);
+        playerNameLabels.add(PlayerFourInfoLabel);
         
         jailPosition.add(P1Jail);
         jailPosition.add(P2Jail);
@@ -2721,7 +2728,7 @@ public class MainGame extends javax.swing.JFrame {
     }//GEN-LAST:event_BuySellPropertiesButtonActionPerformed
 
     private void PlayPauseMusicButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PlayPauseMusicButtonActionPerformed
-        IsPlayingMusic = Monopoly.PauseMusic(IsPlayingMusic);
+        isPlayingMusic = Monopoly.PauseMusic(isPlayingMusic);
     }//GEN-LAST:event_PlayPauseMusicButtonActionPerformed
 
     /**
