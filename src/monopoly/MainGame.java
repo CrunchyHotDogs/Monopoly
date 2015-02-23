@@ -20,19 +20,19 @@ public class MainGame extends javax.swing.JFrame {
     private Property[] boardProperties = new Property[40];
     private JLabel[] propertiesOwned = new JLabel[40];
     private JLabel[] houseLabels = new JLabel[40];
-    private CommunityChestCard[] boardCC = new CommunityChestCard[17];
-    private ChanceCard[] boardC = new ChanceCard[16];
-    private ArrayList<JLabel[]> boardPositionLocation = new ArrayList<JLabel[]>();
-    private ArrayList<JLabel> jailPosition = new ArrayList<JLabel>();
-    private ArrayList<JLabel> playerNameLabels = new ArrayList<JLabel>();
-    private ArrayList<JLabel> playerMoney = new ArrayList<JLabel>();
-    private ArrayList<Player> playerGroup = new ArrayList<Player>();
+    private CommunityChestCard[] communityChestCards = new CommunityChestCard[17];
+    private ChanceCard[] chanceCards = new ChanceCard[16];
+    private ArrayList<JLabel[]> boardPositionLocation = new ArrayList<>();
+    private ArrayList<JLabel> jailPosition = new ArrayList<>();
+    private ArrayList<JLabel> playerNameLabels = new ArrayList<>();
+    private ArrayList<JLabel> playerMoney = new ArrayList<>();
+    private ArrayList<Player> playerGroup = new ArrayList<>();
     private int currentPlayerTurn = 0, peoplePlaying = 4, currentDiceRoll = 0, rollsInARow = 0, playerPurchasing = 0;
     private String gameStyle = "";
     private int startingMoney = 0;
-    private OwnedProperties op = null;
-    private HomeBuyer hb = null;
-    private BuySellProperties bsp = null;
+    private OwnedProperties ownedProperties = null;
+    private HomeBuyer homeBuyer = null;
+    private BuySellProperties buySellProperties = null;
     private boolean isPlayingMusic = true;
     
     
@@ -54,9 +54,9 @@ public class MainGame extends javax.swing.JFrame {
         setPlayers(NumOfPlayers, PlayerNames, PlayerImages, PlayerOwnedImages); //Sets the player list.
         updateMoney(); //Updates the labels for money.
         
-        op = new OwnedProperties(playerGroup, boardProperties); //Creates a new owned properties object.
-        hb = new HomeBuyer(playerGroup, boardProperties); //Creates a new home buyer object.
-        bsp = new BuySellProperties(playerGroup, boardProperties);
+        ownedProperties = new OwnedProperties(playerGroup, boardProperties); //Creates a new owned properties object.
+        homeBuyer = new HomeBuyer(playerGroup, boardProperties); //Creates a new home buyer object.
+        buySellProperties = new BuySellProperties(playerGroup, boardProperties);
         
         try {
             GameBoard.setIcon(new ImageIcon("MonopolyInfo\\" + gameStyle +  "\\Gameboard.jpg")); //Sets the gameboard to which game is being played.
@@ -82,10 +82,10 @@ public class MainGame extends javax.swing.JFrame {
     * @param  PlayerNumber  The player that will have his spaces cleared.
     * @see         label.setIcon()
     */
-    private void clearSpaces(int PlayerNumber) {
+    private void clearSpaces(int playerNumber) {
         //Loops through all of the spaces on the board.
-        for (int i = 0; i < boardPositionLocation.get(PlayerNumber).length; i++) {
-            boardPositionLocation.get(PlayerNumber)[i].setIcon(null);
+        for (int i = 0; i < boardPositionLocation.get(playerNumber).length; i++) {
+            boardPositionLocation.get(playerNumber)[i].setIcon(null);
         }
     }
     
@@ -97,8 +97,8 @@ public class MainGame extends javax.swing.JFrame {
      * @param PlayerLocation The location that the current player is currently at.
      * @param PlayerImage The image that is being set for the player.
      */
-    private void setPlayerLocation(int PlayerNumber, int PlayerLocation, String PlayerImage) {
-        boardPositionLocation.get(PlayerNumber)[PlayerLocation].setIcon(new ImageIcon(PlayerImage));
+    private void setPlayerLocation(int playerNumber, int playerLocation, String playerImage) {
+        boardPositionLocation.get(playerNumber)[playerLocation].setIcon(new ImageIcon(playerImage));
     }
     
     
@@ -172,7 +172,7 @@ public class MainGame extends javax.swing.JFrame {
             //A general label that tells the user where the player landed.
             PlaceLandedLabel.setText("<html>" + playerGroup.get(currentPlayerTurn).GetPlayerName() + " has landed on " + boardProperties[currentLocation].GetPropertyName() + ".</html>");
             //Performs different actions based on the type of space the user landed on.
-            PerformSpaceAction(currentLocation);
+            performSpaceAction(currentLocation);
         }
         
         
@@ -192,7 +192,7 @@ public class MainGame extends javax.swing.JFrame {
             if (rollsInARow == 2) {
                 //Sends them to jail. Resets the board and rolls in a row.
                 rollsInARow = 0;
-                GoToJail(currentPlayerTurn);
+                goToJail(currentPlayerTurn);
                 enableBoard();
                 PropertyNameLabel.setText("");
                 BuyPropertyLabel.setText("<html>" + playerGroup.get(currentPlayerTurn).GetPlayerName() + " has rolled three times in a row! Go right to the " + boardProperties[10].GetPropertyName() + ".</html>");
@@ -234,7 +234,7 @@ public class MainGame extends javax.swing.JFrame {
      * 
      * @param currentLocation The current location of the current player.
      */
-    private void PerformSpaceAction(int currentLocation) {
+    private void performSpaceAction(int currentLocation) {
         String PropertyType = boardProperties[playerGroup.get(currentPlayerTurn).GetPlayerLocation()].GetPropertyType();
         
         //Checks to see what type of space the player landed on.
@@ -256,7 +256,7 @@ public class MainGame extends javax.swing.JFrame {
         }
         //Go To Jail.
         else if (PropertyType.equals("GTJ")) {
-            GoToJail(currentPlayerTurn);
+            goToJail(currentPlayerTurn);
         }
         //Income Tax.
         else if (PropertyType.equals("IT")) {
@@ -351,8 +351,8 @@ public class MainGame extends javax.swing.JFrame {
                 playerMoney.remove(i);
                 jailPosition.remove(i);
                 //Refresh the buttons on the Owner Properties board.
-                op.refreshButtons();
-                hb.refreshButtons();
+                ownedProperties.refreshButtons();
+                homeBuyer.refreshButtons();
                 
                 //Sets the turn to the next player.
                 if (currentPlayerTurn > 0) {
@@ -549,78 +549,78 @@ public class MainGame extends javax.swing.JFrame {
      * selected and perform an effect based on the card. Displays
      * what has happened in a label.
      * 
-     * @param CurrentPlayer The player that has landed on the community chest location.
+     * @param currentPlayer The player that has landed on the community chest location.
      */
-    private void communityChestActive(int CurrentPlayer) {
+    private void communityChestActive(int currentPlayer) {
         Random rand = new Random();
         //Get a a random card from the community chest list.
-        int CCCard = rand.nextInt((16 - 0) + 1) + 0;
-        String CCType = boardCC[CCCard].GetCCKey();
-        String InfoString = "";
+        int communityChestCard = rand.nextInt((16 - 0) + 1) + 0;
+        String card = communityChestCards[communityChestCard].GetCCKey();
+        String infoString = "";
         
         //Decide which community chest card was picked. Refer to CommunityChest.txt for individual results.
-        if (CCType.equals("A")) {
-            playerGroup.get(CurrentPlayer).SendPlayerToGo();
-            clearSpaces(CurrentPlayer);
-            setPlayerLocation(CurrentPlayer, playerGroup.get(currentPlayerTurn).GetPlayerLocation(), playerGroup.get(currentPlayerTurn).GetPlayerImage());
+        if (card.equals("A")) {
+            playerGroup.get(currentPlayer).SendPlayerToGo();
+            clearSpaces(currentPlayer);
+            setPlayerLocation(currentPlayer, playerGroup.get(currentPlayerTurn).GetPlayerLocation(), playerGroup.get(currentPlayerTurn).GetPlayerImage());
         }
-        else if (CCType.equals("B")) {
-            playerGroup.get(CurrentPlayer).IncreaseMoney(200);
+        else if (card.equals("B")) {
+            playerGroup.get(currentPlayer).IncreaseMoney(200);
         }
-        else if (CCType.equals("C")) {
-            playerGroup.get(CurrentPlayer).SubtractMoney(50);
+        else if (card.equals("C")) {
+            playerGroup.get(currentPlayer).SubtractMoney(50);
         }
-        else if (CCType.equals("D")) {
-            playerGroup.get(CurrentPlayer).IncreaseMoney(50);
+        else if (card.equals("D")) {
+            playerGroup.get(currentPlayer).IncreaseMoney(50);
         }
-        else if (CCType.equals("E")) { 
-            playerGroup.get(CurrentPlayer).AwardFreeJailCard();
+        else if (card.equals("E")) { 
+            playerGroup.get(currentPlayer).AwardFreeJailCard();
         }
-        else if (CCType.equals("F")) {
-            GoToJail(CurrentPlayer);
+        else if (card.equals("F")) {
+            goToJail(currentPlayer);
         }
-        else if (CCType.equals("G")) {
-            recursiveReduceMoney(50, CurrentPlayer, 0);
+        else if (card.equals("G")) {
+            recursiveReduceMoney(50, currentPlayer, 0);
         }
-        else if (CCType.equals("H")) {
-            playerGroup.get(CurrentPlayer).IncreaseMoney(100);
+        else if (card.equals("H")) {
+            playerGroup.get(currentPlayer).IncreaseMoney(100);
         }
-        else if (CCType.equals("I")) {
-            playerGroup.get(CurrentPlayer).IncreaseMoney(20);
+        else if (card.equals("I")) {
+            playerGroup.get(currentPlayer).IncreaseMoney(20);
         }
-        else if (CCType.equals("J")) {
-            recursiveReduceMoney(10, CurrentPlayer, 0);
+        else if (card.equals("J")) {
+            recursiveReduceMoney(10, currentPlayer, 0);
         }
-        else if (CCType.equals("K")) {
-            playerGroup.get(CurrentPlayer).IncreaseMoney(100);
+        else if (card.equals("K")) {
+            playerGroup.get(currentPlayer).IncreaseMoney(100);
         }
-        else if (CCType.equals("L")) {
-            playerGroup.get(CurrentPlayer).SubtractMoney(100);
+        else if (card.equals("L")) {
+            playerGroup.get(currentPlayer).SubtractMoney(100);
         }
-        else if (CCType.equals("M")) {
-            playerGroup.get(CurrentPlayer).SubtractMoney(150);
+        else if (card.equals("M")) {
+            playerGroup.get(currentPlayer).SubtractMoney(150);
         }
-        else if (CCType.equals("N")) {
-            playerGroup.get(CurrentPlayer).IncreaseMoney(25);
+        else if (card.equals("N")) {
+            playerGroup.get(currentPlayer).IncreaseMoney(25);
         }
-        else if (CCType.equals("O")) {
-            int AmountToTax = taxForHouses(25, 115, CurrentPlayer);
-            playerGroup.get(CurrentPlayer).SubtractMoney(AmountToTax);
-            TransactionLabel.setText(playerGroup.get(CurrentPlayer).GetPlayerName() + " has been taxed $" + AmountToTax);
+        else if (card.equals("O")) {
+            int AmountToTax = taxForHouses(25, 115, currentPlayer);
+            playerGroup.get(currentPlayer).SubtractMoney(AmountToTax);
+            TransactionLabel.setText(playerGroup.get(currentPlayer).GetPlayerName() + " has been taxed $" + AmountToTax);
         }
-        else if (CCType.equals("P")) {
-            playerGroup.get(CurrentPlayer).IncreaseMoney(10);
+        else if (card.equals("P")) {
+            playerGroup.get(currentPlayer).IncreaseMoney(10);
         }
-        else if (CCType.equals("Q")) {
-            playerGroup.get(CurrentPlayer).IncreaseMoney(100);
+        else if (card.equals("Q")) {
+            playerGroup.get(currentPlayer).IncreaseMoney(100);
         }
         
         
-        InfoString = boardCC[CCCard].GetCCOutputText();
-        InfoString = InfoString.replace("[PLAYER_NAME]", playerGroup.get(CurrentPlayer).GetPlayerName());
-        InfoString = InfoString.replace("[DESCRIPTION]", boardCC[CCCard].GetCCDescription());
+        infoString = communityChestCards[communityChestCard].GetCCOutputText();
+        infoString = infoString.replace("[PLAYER_NAME]", playerGroup.get(currentPlayer).GetPlayerName());
+        infoString = infoString.replace("[DESCRIPTION]", communityChestCards[communityChestCard].GetCCDescription());
 
-        CardLabel.setText(InfoString);
+        CardLabel.setText(infoString);
     }
     
     
@@ -630,35 +630,35 @@ public class MainGame extends javax.swing.JFrame {
      * 
      * @param CurrentPlayer The player that has landed on the chance location.
      */
-    private void chanceActive(int CurrentPlayer) {
+    private void chanceActive(int currentPlayer) {
         Random rand = new Random();
         //Gets a random chance card.
-        int CCard = rand.nextInt((15 - 0) + 1) + 0; //14 is house and hotels.
-        String CType = boardC[CCard].GetCKey();
-        String InfoString = "";
+        int chanceCard = rand.nextInt((15 - 0) + 1) + 0; //14 is house and hotels.
+        String card = chanceCards[chanceCard].GetCKey();
+        String infoString = "";
         
         //Dfferent actions for each chance card. See MonopolyInfo/SPECIFIC GAME TYPE/Chance.txt for individual results.
-        if (CType.equals("A")) {
-            playerGroup.get(CurrentPlayer).SendPlayerToGo();
-            clearSpaces(CurrentPlayer);
-            setPlayerLocation(CurrentPlayer, playerGroup.get(currentPlayerTurn).GetPlayerLocation(), playerGroup.get(currentPlayerTurn).GetPlayerImage());
+        if (card.equals("A")) {
+            playerGroup.get(currentPlayer).SendPlayerToGo();
+            clearSpaces(currentPlayer);
+            setPlayerLocation(currentPlayer, playerGroup.get(currentPlayerTurn).GetPlayerLocation(), playerGroup.get(currentPlayerTurn).GetPlayerImage());
         }
-        else if (CType.equals("B")) {
-            MoveToSpecificLocation(24, CurrentPlayer, "Normal");
+        else if (card.equals("B")) {
+            moveToSpecificLocation(24, currentPlayer, "Normal");
         }
-        else if (CType.equals("C")) {
-            MoveToSpecificLocation(11, CurrentPlayer, "Normal");
+        else if (card.equals("C")) {
+            moveToSpecificLocation(11, currentPlayer, "Normal");
         }
-        else if (CType.equals("D")) {
+        else if (card.equals("D")) {
             int PlayerLocation;
             
-            if (playerGroup.get(CurrentPlayer).SendPlayerToUtility().equals("YES")) {
-                InfoLabel.setText("<html>" + playerGroup.get(CurrentPlayer).GetPlayerName() + " has passed go, receive $200.</html>");
+            if (playerGroup.get(currentPlayer).SendPlayerToUtility().equals("YES")) {
+                InfoLabel.setText("<html>" + playerGroup.get(currentPlayer).GetPlayerName() + " has passed go, receive $200.</html>");
             }
-            clearSpaces(CurrentPlayer);
-            setPlayerLocation(CurrentPlayer, playerGroup.get(currentPlayerTurn).GetPlayerLocation(), playerGroup.get(currentPlayerTurn).GetPlayerImage());
+            clearSpaces(currentPlayer);
+            setPlayerLocation(currentPlayer, playerGroup.get(currentPlayerTurn).GetPlayerLocation(), playerGroup.get(currentPlayerTurn).GetPlayerImage());
             
-            PlayerLocation = playerGroup.get(CurrentPlayer).GetPlayerLocation();
+            PlayerLocation = playerGroup.get(currentPlayer).GetPlayerLocation();
             if (boardProperties[PlayerLocation].GetPropOwned() == false) {
                 buyPropertyEnable();
             }
@@ -666,16 +666,16 @@ public class MainGame extends javax.swing.JFrame {
                 taxPlayerUtility();
             }
         }
-        else if (CType.equals("E")) {
+        else if (card.equals("E")) {
             int PlayerLocation;
             
-            if (playerGroup.get(CurrentPlayer).SendPlayerToRailroad().equals("YES")) {
-                TransactionLabel.setText(playerGroup.get(CurrentPlayer).GetPlayerName() + " has passed go, receive $200.");
+            if (playerGroup.get(currentPlayer).SendPlayerToRailroad().equals("YES")) {
+                TransactionLabel.setText(playerGroup.get(currentPlayer).GetPlayerName() + " has passed go, receive $200.");
             }
-            clearSpaces(CurrentPlayer);
-            setPlayerLocation(CurrentPlayer, playerGroup.get(currentPlayerTurn).GetPlayerLocation(), playerGroup.get(currentPlayerTurn).GetPlayerImage());
+            clearSpaces(currentPlayer);
+            setPlayerLocation(currentPlayer, playerGroup.get(currentPlayerTurn).GetPlayerLocation(), playerGroup.get(currentPlayerTurn).GetPlayerImage());
             
-            PlayerLocation = playerGroup.get(CurrentPlayer).GetPlayerLocation();
+            PlayerLocation = playerGroup.get(currentPlayer).GetPlayerLocation();
             if (boardProperties[PlayerLocation].GetPropOwned() == false) {
                 buyPropertyEnable();
             }
@@ -683,56 +683,57 @@ public class MainGame extends javax.swing.JFrame {
                 taxPlayerRailroad();
             }
         }
-        else if (CType.equals("F")) {
-            playerGroup.get(CurrentPlayer).IncreaseMoney(50);
+        else if (card.equals("F")) {
+            playerGroup.get(currentPlayer).IncreaseMoney(50);
         }
-        else if (CType.equals("G")) {
-            playerGroup.get(CurrentPlayer).AwardFreeJailCard();
+        else if (card.equals("G")) {
+            playerGroup.get(currentPlayer).AwardFreeJailCard();
         }
-        else if (CType.equals("H")) {
+        else if (card.equals("H")) {
             int PlayerLocation;
             
-            playerGroup.get(CurrentPlayer).SetPlayerLocation(-3);
-            clearSpaces(CurrentPlayer);
-            setPlayerLocation(CurrentPlayer, playerGroup.get(currentPlayerTurn).GetPlayerLocation(), playerGroup.get(currentPlayerTurn).GetPlayerImage());
+            playerGroup.get(currentPlayer).SetPlayerLocation(-3);
+            clearSpaces(currentPlayer);
+            setPlayerLocation(currentPlayer, playerGroup.get(currentPlayerTurn).GetPlayerLocation(), playerGroup.get(currentPlayerTurn).GetPlayerImage());
             
-            PlayerLocation = playerGroup.get(CurrentPlayer).GetPlayerLocation();
+            PlayerLocation = playerGroup.get(currentPlayer).GetPlayerLocation();
             
-            PerformSpaceAction(PlayerLocation);
+            performSpaceAction(PlayerLocation);
         }
-        else if (CType.equals("I")) {
-            GoToJail(CurrentPlayer);
+        else if (card.equals("I")) {
+            goToJail(currentPlayer);
         }
-        else if (CType.equals("J")) {
-            int AmountToTax = taxForHouses(25, 100, CurrentPlayer);
-            playerGroup.get(CurrentPlayer).SubtractMoney(AmountToTax);
-            TransactionLabel.setText(playerGroup.get(CurrentPlayer).GetPlayerName() + " has been taxed $" + AmountToTax);
+        else if (card.equals("J")) {
+            int AmountToTax = taxForHouses(25, 100, currentPlayer);
+            playerGroup.get(currentPlayer).SubtractMoney(AmountToTax);
+            TransactionLabel.setText(playerGroup.get(currentPlayer).GetPlayerName() + " has been taxed $" + AmountToTax);
         }
-        else if (CType.equals("K")) {
-            playerGroup.get(CurrentPlayer).SubtractMoney(15);
+        else if (card.equals("K")) {
+            playerGroup.get(currentPlayer).SubtractMoney(15);
         }
-        else if (CType.equals("L")) {
-            MoveToSpecificLocation(5, CurrentPlayer, "Railroad");
+        else if (card.equals("L")) {
+            moveToSpecificLocation(5, currentPlayer, "Railroad");
         }
-        else if (CType.equals("M")) {
-            MoveToSpecificLocation(39, CurrentPlayer, "Normal");
+        else if (card.equals("M")) {
+            moveToSpecificLocation(39, currentPlayer, "Normal");
         }
-        else if (CType.equals("N")) {
-            recursiveReduceMoney(-50, CurrentPlayer, 0);
+        else if (card.equals("N")) {
+            recursiveReduceMoney(-50, currentPlayer, 0);
         }
-        else if (CType.equals("P")) {
-            playerGroup.get(CurrentPlayer).IncreaseMoney(150);
+        else if (card.equals("P")) {
+            playerGroup.get(currentPlayer).IncreaseMoney(150);
         }
-        else if (CType.equals("Q")) {
-            playerGroup.get(CurrentPlayer).IncreaseMoney(100);
+        else if (card.equals("Q")) {
+            playerGroup.get(currentPlayer).IncreaseMoney(100);
         }
 
-        InfoString = boardC[CCard].GetCOutputText();
-        InfoString = InfoString.replace("[PLAYER_NAME]", playerGroup.get(CurrentPlayer).GetPlayerName());
-        InfoString = InfoString.replace("[DESCRIPTION]", boardC[CCard].GetCDescription());
+        infoString = chanceCards[chanceCard].GetCOutputText();
+        infoString = infoString.replace("[PLAYER_NAME]", playerGroup.get(currentPlayer).GetPlayerName());
+        infoString = infoString.replace("[DESCRIPTION]", chanceCards[chanceCard].GetCDescription());
 
-        CardLabel.setText(InfoString);
+        CardLabel.setText(infoString);
     }
+    
     
     /**
      * Every time the player land son some space that sends them to jail.
@@ -740,89 +741,94 @@ public class MainGame extends javax.swing.JFrame {
      * in jail to represent the player's icon. Clears the other icons of the player
      * off of the board.
      * 
-     * @param CurrentPlayer The number of the current player.
+     * @param currentPlayer The number of the current player.
      */
-    private void GoToJail(int CurrentPlayer) {
+    private void goToJail(int currentPlayer) {
         PropertyNameLabel.setText("");
         BuyPropertyLabel.setText("<html>" + playerGroup.get(currentPlayerTurn).GetPlayerName() + " has been sent to the " + boardProperties[10].GetPropertyName() + ".</html>");
-        playerGroup.get(CurrentPlayer).GoToJail();
-        clearSpaces(CurrentPlayer);
-        jailPosition.get(CurrentPlayer).setIcon(new ImageIcon(getClass().getResource(playerGroup.get(CurrentPlayer).GetPlayerImage())));
+        playerGroup.get(currentPlayer).GoToJail();
+        clearSpaces(currentPlayer);
+        jailPosition.get(currentPlayer).setIcon(new ImageIcon(getClass().getResource(playerGroup.get(currentPlayer).GetPlayerImage())));
     }
+    
     
     /**
      * The user pays a $50 fine in order to escape jail. Subtracts money from the player
      * , removes their player from jail.
      */
-    private void PayFineJail() {
+    private void payFineJail() {
         playerGroup.get(currentPlayerTurn).SubtractMoney(50);
         jailPosition.get(currentPlayerTurn).setIcon(null);
         playerGroup.get(currentPlayerTurn).ExitJail();
         InfoLabel.setText("<html>" + playerGroup.get(currentPlayerTurn).GetPlayerName() + " has payed their fines. They may walk free.</html>");
     }
     
+    
     /**
      * If the user has a get out of jail free card they can use it while in jail.
      * Removes the player from jail with no penalties.
      */
-    private void GetOutFree() {
+    private void getOutFree() {
         jailPosition.get(currentPlayerTurn).setIcon(null);
         playerGroup.get(currentPlayerTurn).ExitJail();
         InfoLabel.setText("<html>" + playerGroup.get(currentPlayerTurn).GetPlayerName() + " has used their free jail card. Lucky you!</html>");
     }
     
+    
     /**
      * Moves the player to the current location required by the chance card.
      * 
-     * @param LocationNumber The location in the array that the player will be moving to.
-     * @param CurrentPlayer The current player who's turn it is.
-     * @param PropType The type of property being landed on.
+     * @param locationNumber The location in the array that the player will be moving to.
+     * @param currentPlayer The current player who's turn it is.
+     * @param propType The type of property being landed on.
      */
-    private void MoveToSpecificLocation(int LocationNumber, int CurrentPlayer, String PropType) {
+    private void moveToSpecificLocation(int locationNumber, int currentPlayer, String propType) {
             //Moves the player to a specific property, checks to see if they passed go.
-            if (playerGroup.get(CurrentPlayer).SendPlayerToSpecific(LocationNumber).equals("YES")) {
-                TransactionLabel.setText(playerGroup.get(CurrentPlayer).GetPlayerName() + " has passed go, receive $200.");
+            if (playerGroup.get(currentPlayer).SendPlayerToSpecific(locationNumber).equals("YES")) {
+                TransactionLabel.setText(playerGroup.get(currentPlayer).GetPlayerName() + " has passed go, receive $200.");
             }
             
-            clearSpaces(CurrentPlayer);
-            setPlayerLocation(CurrentPlayer, playerGroup.get(currentPlayerTurn).GetPlayerLocation(), playerGroup.get(currentPlayerTurn).GetPlayerImage());
+            clearSpaces(currentPlayer);
+            setPlayerLocation(currentPlayer, playerGroup.get(currentPlayerTurn).GetPlayerLocation(), playerGroup.get(currentPlayerTurn).GetPlayerImage());
             
             //Checks to see if the property is owned.
-            if (boardProperties[LocationNumber].GetPropOwned() == false) {
+            if (boardProperties[locationNumber].GetPropOwned() == false) {
                 buyPropertyEnable();
             }
             else {
                 //Checks to see which type of property.
-                if (PropType.equals("Railroad")) {
+                if (propType.equals("Railroad")) {
                     taxPlayerRailroad();
                 }
-                else if (PropType.equals("Normal")) {
+                else if (propType.equals("Normal")) {
                     taxPlayer();
                 }
             }
     }
     
+    
     /**
      * If one player is gaining/losing and all the other players are gaining/losing (opposite of the one player)
      * , keep calling the method to take money from players until every player is been checked.
      * 
-     * @param MoneyToTake Amount of money to take away from each player and give to one player.
-     * @param CurrentPlayer Current player that landed on the space. They will either receive money from everyone or give money to everyone.
-     * @param PlayerToReduce Current player that the recursive method is on.
+     * @param moneyToTake Amount of money to take away from each player and give to one player.
+     * @param currentPlayer Current player that landed on the space. They will either receive money from everyone or give money to everyone.
+     * @param playerToReduce Current player that the recursive method is on.
      */
-    private void recursiveReduceMoney(int MoneyToTake, int CurrentPlayer, int PlayerToReduce) {
+    private void recursiveReduceMoney(int moneyToTake, int currentPlayer, int playerToReduce) {
         //Makes sure the money does not get reduced from the player gaining money.
-        if (CurrentPlayer != PlayerToReduce) {
+        if (currentPlayer != playerToReduce) {
             //Subtract money from each player that isn't gaining money. Gives money to the player gaining money.
-            playerGroup.get(PlayerToReduce).SubtractMoney(MoneyToTake);
-            playerGroup.get(CurrentPlayer).IncreaseMoney(MoneyToTake);
+            playerGroup.get(playerToReduce).SubtractMoney(moneyToTake);
+            playerGroup.get(currentPlayer).IncreaseMoney(moneyToTake);
         }
         
         //Checks to see if the recursive function has been through each player.
-        if (PlayerToReduce < peoplePlaying - 1) {
-            recursiveReduceMoney(MoneyToTake, CurrentPlayer, PlayerToReduce + 1);
+        if (playerToReduce < peoplePlaying - 1) {
+            recursiveReduceMoney(moneyToTake, currentPlayer, playerToReduce + 1);
         }
     }
+    
     
     /**
      * Updates the housing labels to represent which properties have houses.
@@ -856,6 +862,10 @@ public class MainGame extends javax.swing.JFrame {
         }
     }
     
+    
+    /**
+     * Adds the houses onto the board where they belong.
+     */
     public void updatePropertiesOwned() {
         int[] PropertiesOwned;
         
@@ -882,6 +892,7 @@ public class MainGame extends javax.swing.JFrame {
         }
     }
     
+    
     /**
      * Enables the roll dice button, disable the buttons for property purchasing.
      * Update the money of the players.
@@ -902,17 +913,18 @@ public class MainGame extends javax.swing.JFrame {
         updateMoney();
     }
     
+    
     /**
      * Sets the player list with the number of people playing.
      * Sets their name and image.
      * 
-     * @param NumOfPlayers The number of people that are playing Monopoly at the start.
-     * @param PlayerNames The array of names for the players.
-     * @param PlayerImages The array of strings containing image location for each player.
+     * @param numOfPlayers The number of people that are playing Monopoly at the start.
+     * @param playerNames The array of names for the players.
+     * @param playerImages The array of strings containing image location for each player.
      */
-    private void setPlayers(int NumOfPlayers, String[] PlayerNames, String[] PlayerImages, String[] OwnerLabels) {
-        for (int i = 0; i < NumOfPlayers; i++) {
-            playerGroup.add(new Player(i, startingMoney, PlayerNames[i], PlayerImages[i], OwnerLabels[i]));
+    private void setPlayers(int numOfPlayers, String[] playerNames, String[] playerImages, String[] ownerLabels) {
+        for (int i = 0; i < numOfPlayers; i++) {
+            playerGroup.add(new Player(i, startingMoney, playerNames[i], playerImages[i], ownerLabels[i]));
             setPlayerLocation(i, 0, playerGroup.get(i).GetPlayerImage());
             if (!playerGroup.get(i).GetPlayerName().substring(playerGroup.get(i).GetPlayerName().length() - 1).equalsIgnoreCase("S")) {
                 playerNameLabels.get(i).setText("<html>" + playerGroup.get(i).GetPlayerName() + "'s Money</html>");
@@ -923,20 +935,21 @@ public class MainGame extends javax.swing.JFrame {
         }    
     }
     
+    
     /**
      * Initializes every variable that is needed for the program. Retrieves the cards from txt files and create
      * arrays of objects for them. Initialize the array for board spaces.
      */
     private void createArray() {
         boolean Found = true;
-        int FLAG = 0, Counter = 0, PropTaxCounter = 0, PropCost = 0, ArrayCounter = 0, BuildingCost = 0;
-        int PropTax[] = new int[6];
-        String FileName, FileData, PropName = "", PropType = "", PropOutput = "";
-        Scanner FileScan = null;
+        int FLAG = 0, counter = 0, propTaxCounter = 0, propCost = 0, arrayCounter = 0, buildingCost = 0;
+        int propTax[] = new int[6];
+        String fileName, fileData, propName = "", propType = "", propOutput = "";
+        Scanner fileScan = null;
         
         try {
-       	    FileName = "MonopolyInfo\\" + gameStyle + "\\Properties.txt";
-       	    FileScan = new Scanner(new File(FileName)); //Sets the file to a variable so the program can read it.
+       	    fileName = "MonopolyInfo\\" + gameStyle + "\\Properties.txt";
+       	    fileScan = new Scanner(new File(fileName)); //Sets the file to a variable so the program can read it.
          }
          catch(FileNotFoundException exception) {  //If their is no file by the right name, it will tell the user the file was not found.
             JOptionPane.showMessageDialog(null, "The input file for properties was not found.", "", JOptionPane.ERROR_MESSAGE); 
@@ -944,60 +957,60 @@ public class MainGame extends javax.swing.JFrame {
          }
          
          if (Found) { //Scans the file and places the info into arrays.
-             while(FileScan.hasNext()) {
-                FileData = FileScan.next();
+             while(fileScan.hasNext()) {
+                fileData = fileScan.next();
                 if (FLAG == 1) {
-                    if (!FileData.equals("*-") && !FileData.equals("||")) {
+                    if (!fileData.equals("*-") && !fileData.equals("||")) {
                         //Checks to see which parameter is being retrieved.
-                        if (Counter == 0) {
-                            PropName += FileData + " ";
+                        if (counter == 0) {
+                            propName += fileData + " ";
                         }
-                        else if (Counter == 1) {
-                            PropTax[PropTaxCounter] = parseInt(FileData);
-                            PropTaxCounter += 1;
+                        else if (counter == 1) {
+                            propTax[propTaxCounter] = parseInt(fileData);
+                            propTaxCounter += 1;
                         }
-                        else if (Counter == 2) {
-                            PropCost = parseInt(FileData);
+                        else if (counter == 2) {
+                            propCost = parseInt(fileData);
                         }
-                        else if (Counter == 3) {
-                            BuildingCost = parseInt(FileData);
+                        else if (counter == 3) {
+                            buildingCost = parseInt(fileData);
                         }
-                        else if (Counter == 4) {
-                            PropType = FileData;
+                        else if (counter == 4) {
+                            propType = fileData;
                         }
                     }
                 }
                 
                 //Checks to see if the file has found either: the start of an object,
                 // the end of an object, or a parameter divider.
-                if (FileData.equals("-*")) {
+                if (fileData.equals("-*")) {
                     FLAG = 1;
                 }
-                if (FileData.equals("*-")) {
+                if (fileData.equals("*-")) {
                     FLAG = 2;
                 }
-                if (FileData.equals("||")) {
-                    Counter += 1;
+                if (fileData.equals("||")) {
+                    counter += 1;
                 }
                 
                 //Checks to see if the file is at the end of one of the objects.
                 if (FLAG == 2) {
-                    boardProperties[ArrayCounter] = new Property(PropName.trim(), PropType.trim(), PropTax, PropCost, BuildingCost);
-                    PropName = "";
-                    Counter = 0;
-                    PropTaxCounter = 0;
-                    ArrayCounter += 1;
+                    boardProperties[arrayCounter] = new Property(propName.trim(), propType.trim(), propTax, propCost, buildingCost);
+                    propName = "";
+                    counter = 0;
+                    propTaxCounter = 0;
+                    arrayCounter += 1;
                 }   
             }
         }
          
-        PropName = "";
-        ArrayCounter = 0;
+        propName = "";
+        arrayCounter = 0;
          
         //Adds all of the community chest cards into an array.
         try { 
-       	    FileName = "MonopolyInfo\\" + gameStyle + "\\CommunityChest.txt";
-       	    FileScan = new Scanner(new File(FileName)); //Sets the file to a variable so the program can read it.
+       	    fileName = "MonopolyInfo\\" + gameStyle + "\\CommunityChest.txt";
+       	    fileScan = new Scanner(new File(fileName)); //Sets the file to a variable so the program can read it.
         }
         catch(FileNotFoundException exception) {  //If their is no file by the right name, it will tell the user the file was not found.
             JOptionPane.showMessageDialog(null, "The input file for community chest cards was not found.", "", JOptionPane.ERROR_MESSAGE); 
@@ -1005,55 +1018,55 @@ public class MainGame extends javax.swing.JFrame {
         }
          
         if (Found) { //Scans the file and places the info into arrays.
-            while(FileScan.hasNext()) {
-                FileData = FileScan.next();
+            while(fileScan.hasNext()) {
+                fileData = fileScan.next();
                 
                 if (FLAG == 1) {
-                    if (!FileData.equals("*-") && !FileData.equals("||")) {
+                    if (!fileData.equals("*-") && !fileData.equals("||")) {
                         //Checks to see which parameter is being retrieved.
-                        if (Counter == 0) {
-                            PropName += FileData + " ";
+                        if (counter == 0) {
+                            propName += fileData + " ";
                         }
-                        else if (Counter == 1) {
-                            PropType = FileData;
+                        else if (counter == 1) {
+                            propType = fileData;
                         }
-                        else if (Counter == 2) {
-                            PropOutput += FileData + " ";
+                        else if (counter == 2) {
+                            propOutput += fileData + " ";
                         }
                     }
                 }
                 
                 //Checks to see if the file has found either: the start of an object,
                 // the end of an object, or a parameter divider.
-                if (FileData.equals("-*")) {
+                if (fileData.equals("-*")) {
                     FLAG = 1;
                 }
-                if (FileData.equals("*-")) {
+                if (fileData.equals("*-")) {
                     FLAG = 2;
                 }
-                if (FileData.equals("||")) {
-                    Counter += 1;
+                if (fileData.equals("||")) {
+                    counter += 1;
                 }
                 
                 //Checks to see if the file is at the end of one of the objects.
                 if (FLAG == 2) {
-                    boardCC[ArrayCounter] = new CommunityChestCard(PropName.trim(), PropType.trim(), PropOutput.trim());
-                    PropName = "";
-                    PropOutput = "";
-                    Counter = 0;
-                    ArrayCounter += 1;
+                    communityChestCards[arrayCounter] = new CommunityChestCard(propName.trim(), propType.trim(), propOutput.trim());
+                    propName = "";
+                    propOutput = "";
+                    counter = 0;
+                    arrayCounter += 1;
                 }   
             }
         } 
         
          
-        PropName = "";
-        ArrayCounter = 0;
+        propName = "";
+        arrayCounter = 0;
          
         //Adds all of the community chest cards into an array.
         try { 
-       	    FileName = "MonopolyInfo\\" + gameStyle + "\\Chance.txt";
-       	    FileScan = new Scanner(new File(FileName)); //Sets the file to a variable so the program can read it.
+       	    fileName = "MonopolyInfo\\" + gameStyle + "\\Chance.txt";
+       	    fileScan = new Scanner(new File(fileName)); //Sets the file to a variable so the program can read it.
         }
         catch(FileNotFoundException exception) {  //If their is no file by the right name, it will tell the user the file was not found.
             JOptionPane.showMessageDialog(null, "The input file for chance cards cards was not found.", "", JOptionPane.ERROR_MESSAGE); 
@@ -1061,42 +1074,42 @@ public class MainGame extends javax.swing.JFrame {
         }
          
         if (Found) { //Scans the file and places the info into arrays.
-            while(FileScan.hasNext()) {
-                FileData = FileScan.next();
+            while(fileScan.hasNext()) {
+                fileData = fileScan.next();
                 //Checks to see which parameter is being retrieved.
                 if (FLAG == 1) {
-                    if (!FileData.equals("*-") && !FileData.equals("||")) {
-                        if (Counter == 0) {
-                            PropName += FileData + " ";
+                    if (!fileData.equals("*-") && !fileData.equals("||")) {
+                        if (counter == 0) {
+                            propName += fileData + " ";
                         }
-                        else if (Counter == 1) {
-                            PropType = FileData;
+                        else if (counter == 1) {
+                            propType = fileData;
                         }
-                        else if (Counter == 2) {
-                            PropOutput += FileData + " ";
+                        else if (counter == 2) {
+                            propOutput += fileData + " ";
                         }
                     }
                 }
                 
                 //Checks to see if the file has found either: the start of an object,
                 // the end of an object, or a parameter divider.
-                if (FileData.equals("-*")) {
+                if (fileData.equals("-*")) {
                     FLAG = 1;
                 }
-                if (FileData.equals("*-")) {
+                if (fileData.equals("*-")) {
                     FLAG = 2;
                 }
-                if (FileData.equals("||")) {
-                    Counter += 1;
+                if (fileData.equals("||")) {
+                    counter += 1;
                 }
                
                 //Checks to see if the file is at the end of one of the objects.
                 if (FLAG == 2) {
-                    boardC[ArrayCounter] = new ChanceCard(PropName.trim(), PropType.trim(), PropOutput.trim());
-                    PropName = "";
-                    PropOutput = "";
-                    Counter = 0;
-                    ArrayCounter += 1;
+                    chanceCards[arrayCounter] = new ChanceCard(propName.trim(), propType.trim(), propOutput.trim());
+                    propName = "";
+                    propOutput = "";
+                    counter = 0;
+                    arrayCounter += 1;
                 }   
             }
         } 
@@ -1373,6 +1386,7 @@ public class MainGame extends javax.swing.JFrame {
         boardPositionLocation.get(3)[38] = P4S38;
         boardPositionLocation.get(3)[39] = P4S39;
     }    
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -2700,25 +2714,25 @@ public class MainGame extends javax.swing.JFrame {
     }//GEN-LAST:event_DeclinePropertyButtonActionPerformed
 
     private void JailPayFineButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JailPayFineButtonActionPerformed
-        PayFineJail();
+        payFineJail();
         moveCharacters();
     }//GEN-LAST:event_JailPayFineButtonActionPerformed
 
     private void JailGetOutFreeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JailGetOutFreeButtonActionPerformed
-        GetOutFree();
+        getOutFree();
         moveCharacters();
     }//GEN-LAST:event_JailGetOutFreeButtonActionPerformed
 
     private void ViewPropertyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewPropertyButtonActionPerformed
-        op.setVisible(true);
+        ownedProperties.setVisible(true);
     }//GEN-LAST:event_ViewPropertyButtonActionPerformed
 
     private void BuyHousesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BuyHousesButtonActionPerformed
-        hb.setVisible(true);
+        homeBuyer.setVisible(true);
     }//GEN-LAST:event_BuyHousesButtonActionPerformed
 
     private void BuySellPropertiesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BuySellPropertiesButtonActionPerformed
-        bsp.setVisible(true);
+        buySellProperties.setVisible(true);
     }//GEN-LAST:event_BuySellPropertiesButtonActionPerformed
 
     private void PlayPauseMusicButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PlayPauseMusicButtonActionPerformed
