@@ -6,26 +6,9 @@ package monopoly;
  * @author c0621990 - Kyle Crossman
  * @date December 3 2014
  */
-public class ChanceCard {
-    private String CDescription, COutputText;
-    private String CKey;
+public class ChanceCard extends Card {
     
-    
-    public ChanceCard(String CD, String CK, String COT) {
-        this.CDescription = CD;
-        this.CKey = CK;
-        this.COutputText = COT;
-    }
-    
-    public String GetCDescription() {
-        return this.CDescription;
-    }
-    
-    public String GetCKey() {
-        return this.CKey;
-    }
-    
-    public String GetCOutputText() {
-        return this.COutputText;
+    public ChanceCard(String sentDescription, String sentKey, String sentOutputText) {
+        super(sentDescription, sentKey, sentOutputText);
     }
 }

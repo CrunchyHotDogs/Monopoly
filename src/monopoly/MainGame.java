@@ -555,7 +555,7 @@ public class MainGame extends javax.swing.JFrame {
         Random rand = new Random();
         //Get a a random card from the community chest list.
         int communityChestCard = rand.nextInt((16 - 0) + 1) + 0;
-        String card = communityChestCards[communityChestCard].GetCCKey();
+        String card = communityChestCards[communityChestCard].getKey();
         String infoString = "";
         
         //Decide which community chest card was picked. Refer to CommunityChest.txt for individual results.
@@ -616,9 +616,9 @@ public class MainGame extends javax.swing.JFrame {
         }
         
         
-        infoString = communityChestCards[communityChestCard].GetCCOutputText();
+        infoString = communityChestCards[communityChestCard].getOutputText();
         infoString = infoString.replace("[PLAYER_NAME]", playerGroup.get(currentPlayer).GetPlayerName());
-        infoString = infoString.replace("[DESCRIPTION]", communityChestCards[communityChestCard].GetCCDescription());
+        infoString = infoString.replace("[DESCRIPTION]", communityChestCards[communityChestCard].getDescription());
 
         CardLabel.setText(infoString);
     }
@@ -634,7 +634,7 @@ public class MainGame extends javax.swing.JFrame {
         Random rand = new Random();
         //Gets a random chance card.
         int chanceCard = rand.nextInt((15 - 0) + 1) + 0; //14 is house and hotels.
-        String card = chanceCards[chanceCard].GetCKey();
+        String card = chanceCards[chanceCard].getKey();
         String infoString = "";
         
         //Dfferent actions for each chance card. See MonopolyInfo/SPECIFIC GAME TYPE/Chance.txt for individual results.
@@ -727,9 +727,9 @@ public class MainGame extends javax.swing.JFrame {
             playerGroup.get(currentPlayer).IncreaseMoney(100);
         }
 
-        infoString = chanceCards[chanceCard].GetCOutputText();
+        infoString = chanceCards[chanceCard].getOutputText();
         infoString = infoString.replace("[PLAYER_NAME]", playerGroup.get(currentPlayer).GetPlayerName());
-        infoString = infoString.replace("[DESCRIPTION]", chanceCards[chanceCard].GetCDescription());
+        infoString = infoString.replace("[DESCRIPTION]", chanceCards[chanceCard].getDescription());
 
         CardLabel.setText(infoString);
     }

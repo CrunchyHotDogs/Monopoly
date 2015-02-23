@@ -6,25 +6,9 @@ package monopoly;
  * @author c0621990 - Kyle Crossman
  * @date December 3 2014
  */
-public class CommunityChestCard {
-    private String CCDescription, CCOutputText;
-    private String CCKey;
+public class CommunityChestCard extends Card {
     
-    public CommunityChestCard(String CCD, String CCK, String CCOT) {
-        this.CCDescription = CCD;
-        this.CCKey = CCK;
-        this.CCOutputText = CCOT;
-    }
-    
-    public String GetCCDescription() {
-        return this.CCDescription;
-    }
-    
-    public String GetCCKey() {
-        return this.CCKey;
-    }
-    
-    public String GetCCOutputText() {
-        return this.CCOutputText;
+    public CommunityChestCard(String sentDescription, String sentKey, String sentOutputText) {
+        super(sentDescription, sentKey, sentOutputText);
     }
 }
