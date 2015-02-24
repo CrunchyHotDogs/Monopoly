@@ -228,6 +228,7 @@ public class MonopolyBoard extends javax.swing.JFrame {
         PlayerTurnLabel.setText("Currently " + playerGroup.get(currentPlayerTurn).getName() + " gets the next roll.");
     }
     
+    
     /**
      * Performs an action based on the type of space the player has landed on.
      * 
@@ -301,6 +302,7 @@ public class MonopolyBoard extends javax.swing.JFrame {
             }
         }
     }
+    
     
     /**
      * If a player's money goes below 0, this method is called. Removes the player from the game
@@ -499,6 +501,7 @@ public class MonopolyBoard extends javax.swing.JFrame {
         }
     }
     
+    
     /**
      * Enables the buttons that allows the current player to buy a property or go to next turn.
      * Doesn't let the next player roll until the current player decides.
@@ -511,6 +514,7 @@ public class MonopolyBoard extends javax.swing.JFrame {
         BuyPropertyLabel.setText("<html>Would you like to purchase this property, " + playerGroup.get(currentPlayerTurn).getName() + "?</html>" );
         PropertyNameLabel.setText("<html>" + boardProperties[playerGroup.get(currentPlayerTurn).getLocation()].getName() + " for $" + boardProperties[playerGroup.get(currentPlayerTurn).getLocation()].getPurchaseCost() + "</html>");
     }
+    
     
     /**
      * Finds out how much the player is being taxed for the houses/hotels they own.
