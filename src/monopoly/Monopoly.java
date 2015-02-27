@@ -1,5 +1,8 @@
 package monopoly;
 
+import java.io.File;
+import java.util.Random;
+
 /**
  * Starts the main menu.
  * @author c0621990 - Kyle Crossman
@@ -54,6 +57,18 @@ public class Monopoly {
     
     public static void changeMusic() {
         musicPlayer.chooseSong("/monopoly/Music/Sevje.wav");
+    }
+    
+    public static void newRandomSong() {
+        File[] listOfFiles;
+        File folder;
+        String folderPath = "/monopoly/Music/";
+        Random rand = new Random();
+        
+        folder = new File(folderPath);
+        listOfFiles = folder.listFiles();
+        
+        musicPlayer.chooseSong("/monopoly/Music/" + listOfFiles[rand.nextInt(listOfFiles.length)].getName());
     }
     
     /**

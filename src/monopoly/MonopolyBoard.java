@@ -42,6 +42,7 @@ public class MonopolyBoard extends javax.swing.JFrame {
      * @param PlayerImages An array of the url for player images.
      * @param GameType The type of property/board the player is playing on.
      * @param Money The starting money.
+     * @param PlayerOwnedImages The images that show who owns what property.
      */
     public MonopolyBoard(int NumOfPlayers, String[] PlayerNames, String[] PlayerImages, String GameType, int Money, String[] PlayerOwnedImages) {
         gameStyle = GameType; //Sets the global variable for the gameboard.
@@ -1651,6 +1652,7 @@ public class MonopolyBoard extends javax.swing.JFrame {
         BuySellPropertiesButton = new javax.swing.JButton();
         MusicLabel = new javax.swing.JLabel();
         PlayPauseMusicButton = new javax.swing.JButton();
+        ChangeSongButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -2667,6 +2669,13 @@ public class MonopolyBoard extends javax.swing.JFrame {
             }
         });
 
+        ChangeSongButton.setText("Change Song");
+        ChangeSongButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ChangeSongButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -2682,6 +2691,8 @@ public class MonopolyBoard extends javax.swing.JFrame {
                 .addComponent(MusicLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(PlayPauseMusicButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ChangeSongButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addComponent(PanelGame, javax.swing.GroupLayout.PREFERRED_SIZE, 1327, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2696,7 +2707,8 @@ public class MonopolyBoard extends javax.swing.JFrame {
                     .addComponent(BuyHousesButton)
                     .addComponent(BuySellPropertiesButton)
                     .addComponent(MusicLabel)
-                    .addComponent(PlayPauseMusicButton))
+                    .addComponent(PlayPauseMusicButton)
+                    .addComponent(ChangeSongButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(PanelGame, javax.swing.GroupLayout.DEFAULT_SIZE, 813, Short.MAX_VALUE))
         );
@@ -2743,6 +2755,10 @@ public class MonopolyBoard extends javax.swing.JFrame {
         isPlayingMusic = Monopoly.pauseMusic(isPlayingMusic);
     }//GEN-LAST:event_PlayPauseMusicButtonActionPerformed
 
+    private void ChangeSongButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChangeSongButtonActionPerformed
+        Monopoly.newRandomSong();
+    }//GEN-LAST:event_ChangeSongButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -2786,6 +2802,7 @@ public class MonopolyBoard extends javax.swing.JFrame {
     private javax.swing.JButton BuySellPropertiesButton;
     private javax.swing.JLabel CardInstruction;
     private javax.swing.JLabel CardLabel;
+    private javax.swing.JButton ChangeSongButton;
     private javax.swing.JButton DeclinePropertyButton;
     private javax.swing.JButton DiceRoll;
     private javax.swing.JLabel FirstDiceImageLabel;
