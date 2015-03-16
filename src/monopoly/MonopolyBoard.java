@@ -724,10 +724,10 @@ public class MonopolyBoard extends javax.swing.JFrame {
         else if (card.equals("N")) {
             recursiveReduceMoney(-50, currentPlayer, 0);
         }
-        else if (card.equals("P")) {
+        else if (card.equals("O")) {
             playerGroup.get(currentPlayer).increaseMoney(150);
         }
-        else if (card.equals("Q")) {
+        else if (card.equals("P")) {
             playerGroup.get(currentPlayer).increaseMoney(100);
         }
 

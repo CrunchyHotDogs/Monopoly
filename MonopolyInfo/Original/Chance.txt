@@ -12,5 +12,5 @@
 -* Take A Trip To Reading Railroad || L || <html>[DESCRIPTION]<br/>[PLAYER_NAME] receives $200 if they pass go. Toot toot!</html> *-
 -* Take A Walk On Broadwalk || M || <html>[DESCRIPTION]<br/>[PLAYER_NAME] takes a walk on Broadwalk, better hope no one lives here!</html> *-
 -* You Have Been Elected Chairman of the Board || N || <html>[DESCRIPTION]<br/>[PLAYER_NAME] pays each player $50.</html> *-
--* Your Building Loan Matures || P || <html>[DESCRIPTION]<br/>[PLAYER_NAME] receives $150.</html> *-
--* You Have Won A Crossword Competition || Q || <html>[DESCRIPTION]<br/>[PLAYER_NAME] receives $100.</html> *-
+-* Your Building Loan Matures || O || <html>[DESCRIPTION]<br/>[PLAYER_NAME] receives $150.</html> *-
+-* You Have Won A Crossword Competition || P || <html>[DESCRIPTION]<br/>[PLAYER_NAME] receives $100.</html> *-
