@@ -1145,6 +1145,10 @@ public class MonopolyBoard extends javax.swing.JFrame {
         }
     }    
     
+    /**
+     * Tries to create the board info from a database. 
+     * If the board can't be built properly then call the normal board builder and just use a text file.
+     */
     private void createArrayFromDatabase() {
         boolean successFLAG = true;
         try (Connection conn = credentials.Credentials.getConnection()) {
@@ -1226,6 +1230,10 @@ public class MonopolyBoard extends javax.swing.JFrame {
         }
     }
     
+    /**
+     * Sets all of the arrays. The arrays are used for holding the labels that will show various
+     * information on the board.
+     */
     private void setLabels() {
         //Creates arrays of JLabels in the list of JLabels.
         for (int i = 0; i < 4; i++) {
