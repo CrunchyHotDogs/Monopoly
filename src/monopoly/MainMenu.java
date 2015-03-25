@@ -1,6 +1,15 @@
 package monopoly;
 
+import database.DatabaseResults;
 import java.io.File;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -19,6 +28,8 @@ public class MainMenu extends javax.swing.JFrame {
     //The images that are available for use.
     String[] possibleImages = new String[4];
     String[] arrayOfExcisting;
+    String[] arrayOfBoards;
+    int boardId = -1;
     File folder;
     File[] listOfFiles;
     JTextField listOfNames[] = new JTextField[4];
@@ -122,7 +133,7 @@ public class MainMenu extends javax.swing.JFrame {
             }
         
             //Create a new monopoly game.
-            Monopoly.createMonopolyGame(numOfPlayers, playerNames, playerImages, gameType, startingGold, playerOwnedImages);
+            Monopoly.createMonopolyGame(numOfPlayers, playerNames, playerImages, gameType, startingGold, playerOwnedImages, boardId);
         }
         //If the user didn't enter enough players.
         else {
@@ -139,7 +150,37 @@ public class MainMenu extends javax.swing.JFrame {
             playerOwnerImages[0] = possibleOwnerImages[0];
             playerOwnerImages[1] = possibleOwnerImages[1];
             
-            Monopoly.createMonopolyGame(2, playerNames, playerImages, gameType, startingGold, playerOwnerImages);
+            Monopoly.createMonopolyGame(2, playerNames, playerImages, gameType, startingGold, playerOwnerImages, boardId);
+        }
+    }
+    
+    private void setBoard() {
+        DefaultListModel<BoardInfo> model = new DefaultListModel();
+        
+        try (Connection conn = credentials.Credentials.getConnection()) {
+            PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM board;");
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                BoardInfo boardInfo = new BoardInfo(rs.getString("board_name"), rs.getInt("board_id"));
+                model.addElement(boardInfo);
+            }
+        } 
+        catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        
+        
+        
+        String popUpTitle = "Choose a Board";
+        JList mapList = new JList();
+        mapList.setModel(model);
+        mapList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        
+        JOptionPane.showMessageDialog(null, mapList, popUpTitle, JOptionPane.PLAIN_MESSAGE);
+        if (mapList.getSelectedValue() != null) {
+            BoardInfo bi = (BoardInfo) mapList.getSelectedValue();
+            boardId = bi.getId();
         }
     }
     
@@ -192,6 +233,7 @@ public class MainMenu extends javax.swing.JFrame {
         SelectIcon3Button = new javax.swing.JButton();
         SelectIcon4Button = new javax.swing.JButton();
         ChangeMusic = new javax.swing.JButton();
+        selectMapButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -261,6 +303,13 @@ public class MainMenu extends javax.swing.JFrame {
             }
         });
 
+        selectMapButton.setText("Select Map");
+        selectMapButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectMapButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -298,9 +347,12 @@ public class MainMenu extends javax.swing.JFrame {
                             .addComponent(SelectIcon3Button, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(SelectIcon4Button, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(100, 100, 100)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(37, 37, 37)
-                        .addComponent(StartGoldText, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(37, 37, 37)
+                                .addComponent(StartGoldText, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(selectMapButton))
                         .addGap(31, 31, 31)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(StartGameButton)
@@ -343,14 +395,17 @@ public class MainMenu extends javax.swing.JFrame {
                         .addComponent(SelectIcon3Button, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(10, 10, 10)
                         .addComponent(SelectIcon4Button, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(StartGoldText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(47, 47, 47)
                         .addComponent(StartGameButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(ChangeMusic)))
-                .addContainerGap(16, Short.MAX_VALUE))
+                        .addComponent(ChangeMusic))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(selectMapButton)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -384,6 +439,10 @@ public class MainMenu extends javax.swing.JFrame {
     private void ChangeMusicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChangeMusicActionPerformed
         Monopoly.changeMusic();
     }//GEN-LAST:event_ChangeMusicActionPerformed
+
+    private void selectMapButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectMapButtonActionPerformed
+        setBoard();
+    }//GEN-LAST:event_selectMapButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -441,5 +500,6 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JTextField StartGoldText;
     private javax.swing.JLabel TitleAuthorLabel;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton selectMapButton;
     // End of variables declaration//GEN-END:variables
 }

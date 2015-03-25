@@ -22,8 +22,8 @@ public class Monopoly {
      * @param startingGold The starting money for the game.
      * @param playerOwnedLabels The color that will display above a property if a player owns it.
      */
-    public static void createMonopolyGame(int playerCount, String[] playerNames, String[] playerImages, String gameType, int startingGold, String[] playerOwnedLabels) {
-        monopolyBoard = new MonopolyBoard(playerCount, playerNames, playerImages, gameType, startingGold, playerOwnedLabels);
+    public static void createMonopolyGame(int playerCount, String[] playerNames, String[] playerImages, String gameType, int startingGold, String[] playerOwnedLabels, int boardId) {
+        monopolyBoard = new MonopolyBoard(playerCount, playerNames, playerImages, gameType, startingGold, playerOwnedLabels, boardId);
         monopolyBoard.setVisible(true);
     }
     

@@ -1,12 +1,20 @@
 package monopoly;
 
+import java.awt.Image;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import static java.lang.Integer.parseInt;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 import javax.swing.ImageIcon;
+import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -32,38 +40,44 @@ public class MonopolyBoard extends javax.swing.JFrame {
     private BuySellProperties buySellProperties = null;
     private int currentPlayerTurn = 0, peoplePlaying = 4, currentDiceRoll = 0, rollsInARow = 0, playerPurchasing = 0, startingMoney = 0;
     private String gameStyle = "";
+    private int gameBoardId = 0;
     private boolean isPlayingMusic = true;
     
     
     /**
      * Creates new form MainMenu
-     * @param NumOfPlayers The amount of people playing.
-     * @param PlayerNames An array of names for each player.
-     * @param PlayerImages An array of the url for player images.
-     * @param GameType The type of property/board the player is playing on.
-     * @param Money The starting money.
-     * @param PlayerOwnedImages The images that show who owns what property.
+     * @param numOfPlayers The amount of people playing.
+     * @param playerNames An array of names for each player.
+     * @param playerImages An array of the url for player images.
+     * @param gameType The type of property/board the player is playing on.
+     * @param money The starting money.
+     * @param playerOwnedImages The images that show who owns what property.
      */
-    public MonopolyBoard(int NumOfPlayers, String[] PlayerNames, String[] PlayerImages, String GameType, int Money, String[] PlayerOwnedImages) {
-        gameStyle = GameType; //Sets the global variable for the gameboard.
-        startingMoney = Money;
-        peoplePlaying = NumOfPlayers;
+    public MonopolyBoard(int numOfPlayers, String[] playerNames, String[] playerImages, String gameType, int money, String[] playerOwnedImages, int boardId) {
+        //Sets the global variable for the gameboard.
+        if (!gameType.equals("")) {
+            gameStyle = gameType;
+        }
+        else {
+            gameStyle = "Original";
+        }
+        
+        gameBoardId = boardId;
+        startingMoney = money;
+        peoplePlaying = numOfPlayers;
         
         initComponents();
-        createArray(); //Initialize every array needed for the game. Creates all of the objects needed.
-        setPlayers(NumOfPlayers, PlayerNames, PlayerImages, PlayerOwnedImages); //Sets the player list.
+        
+        //Initialize every array needed for the game. Creates all of the objects needed.
+        createArrayFromDatabase(); //Tries to initialize based on database info.
+        setLabels();
+        
+        setPlayers(numOfPlayers, playerNames, playerImages, playerOwnedImages); //Sets the player list.
         updateMoney(); //Updates the labels for money.
         
         ownedProperties = new OwnedProperties(playerGroup, boardProperties); //Creates a new owned properties object.
         homeBuyer = new HomeBuyer(playerGroup, boardProperties); //Creates a new home buyer object.
         buySellProperties = new BuySellProperties(playerGroup, boardProperties);
-        
-        try {
-            GameBoard.setIcon(new ImageIcon("MonopolyInfo\\" + gameStyle +  "\\Gameboard.jpg")); //Sets the gameboard to which game is being played.
-        }
-        catch (Exception ex) {
-            
-        }
         
         //Makes the turn label have proper grammer.
         if (!playerGroup.get(currentPlayerTurn).getName().substring(playerGroup.get(currentPlayerTurn).getName().length() - 1).equalsIgnoreCase("S")) {
@@ -619,7 +633,6 @@ public class MonopolyBoard extends javax.swing.JFrame {
             playerGroup.get(currentPlayer).increaseMoney(100);
         }
         
-        
         infoString = communityChestCards[communityChestCard].getOutputText();
         infoString = infoString.replace("[PLAYER_NAME]", playerGroup.get(currentPlayer).getName());
         infoString = infoString.replace("[DESCRIPTION]", communityChestCards[communityChestCard].getDescription());
@@ -952,6 +965,18 @@ public class MonopolyBoard extends javax.swing.JFrame {
         String fileName, fileData, propName = "", propType = "", propOutput = "";
         Scanner fileScan = null;
         
+        boardProperties = new Property[40];
+        communityChestCards = new CommunityChestCard[17];
+        chanceCards = new ChanceCard[16];
+        
+        try {
+            GameBoard.setIcon(new ImageIcon("MonopolyInfo\\" + gameStyle +  "\\Gameboard.jpg")); //Sets the gameboard to which game is being played.
+        }
+        catch (Exception ex) {
+            
+        }
+                
+                
         try {
        	    fileName = "MonopolyInfo\\" + gameStyle + "\\Properties.txt";
        	    fileScan = new Scanner(new File(fileName)); //Sets the file to a variable so the program can read it.
@@ -1117,8 +1142,96 @@ public class MonopolyBoard extends javax.swing.JFrame {
                     arrayCounter += 1;
                 }   
             }
+        }
+    }    
+    
+    private void createArrayFromDatabase() {
+        boolean successFLAG = true;
+        try (Connection conn = credentials.Credentials.getConnection()) {
+            ResultSet rs = null;
+            URL imageUrl = null;
+            int Counter = 0;
+            PreparedStatement pstmt = conn.prepareStatement("SELECT image_url FROM board WHERE board_id = ?;");
+            pstmt.setInt(1, gameBoardId);
+            rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                imageUrl = new URL(rs.getString("image_url"));
+            }
+            Image image = ImageIO.read(imageUrl);
+            ImageIcon icon = new ImageIcon(image);
+            
+            GameBoard.setIcon(icon); //Sets the gameboard to which game is being played.
+            
+            pstmt = conn.prepareStatement("SELECT * FROM property WHERE board_id = ? ORDER BY property_id;");
+            pstmt.setInt(1, gameBoardId);
+            rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                int taxCounter = 0;
+                String name = rs.getString("name");
+                String type = rs.getString("type");
+                int[] tax = new int[6];
+                int cost = rs.getInt("cost");
+                int buildingCost = rs.getInt("house_cost");
+                
+                Scanner taxScanner = new Scanner(rs.getString("tax")).useDelimiter(",");
+                while (taxScanner.hasNextInt()){
+                    tax[taxCounter] = taxScanner.nextInt();
+                }
+                
+                boardProperties[Counter] = new Property(name, type, tax, cost, buildingCost);
+                Counter += 1;
+            }
+            
+            pstmt = conn.prepareStatement("SELECT * FROM chance WHERE board_id = ? ORDER BY chance_id;");
+            pstmt.setInt(1, gameBoardId);
+            rs = pstmt.executeQuery();
+            Counter = 0;
+            
+            while (rs.next()) {
+                String name = rs.getString("name");
+                String desc = rs.getString("description");
+                String type = rs.getString("type");
+                communityChestCards[Counter] = new CommunityChestCard(name, type, desc);
+            }
+            
+            pstmt = conn.prepareStatement("SELECT * FROM communitychest WHERE board_id = ? ORDER BY chest_id;");
+            pstmt.setInt(1, gameBoardId);
+            rs = pstmt.executeQuery();
+            Counter = 0;
+            
+            while (rs.next()) {
+                String name = rs.getString("name");
+                String desc = rs.getString("description");
+                String type = rs.getString("type");
+                chanceCards[Counter] = new ChanceCard(name, type, desc);
+            }
         } 
-         
+        catch (SQLException ex) {
+            successFLAG = false;
+            System.out.println(ex.getMessage());
+        }
+        catch (IOException ex) {
+            successFLAG = false;
+            System.out.println(ex.getMessage());
+        }
+        catch (Exception ex) {
+            successFLAG = false;
+            System.out.println(ex.getMessage());
+        }
+        
+        if (successFLAG == false) {
+            createArray();
+        }
+    }
+    
+    private void setLabels() {
+        //Creates arrays of JLabels in the list of JLabels.
+        for (int i = 0; i < 4; i++) {
+            boardPositionLocation.add(new JLabel[40]);
+        }
+        
         playerMoney.add(PlayerOneMoneyLabel);
         playerMoney.add(PlayerTwoMoneyLabel);
         playerMoney.add(PlayerThreeMoneyLabel);
@@ -1133,12 +1246,7 @@ public class MonopolyBoard extends javax.swing.JFrame {
         jailPosition.add(P2Jail);
         jailPosition.add(P3Jail);
         jailPosition.add(P4Jail);
-        
-        //Creates arrays of JLabels in the list of JLabels.
-        for (int i = 0; i < 4; i++) {
-            boardPositionLocation.add(new JLabel[40]);
-        }
-        
+
         //Labels for all of the properties. Shows a color based on who owns the property. 
         //Labels are right outside of their respective property.
         propertiesOwned[0] = null;
@@ -1390,8 +1498,7 @@ public class MonopolyBoard extends javax.swing.JFrame {
         boardPositionLocation.get(3)[37] = P4S37;
         boardPositionLocation.get(3)[38] = P4S38;
         boardPositionLocation.get(3)[39] = P4S39;
-    }    
-    
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
