@@ -13,8 +13,11 @@ public class Credentials {
         
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            String jdbc = "jdbc:mysql://localhost/mbb";
-            String user = "root";
+            String jdbc = "jdbc:mysql://127.3.218.2/mbb";
+            String user = "adminL2FLvIx";
+            //String pass = "FZQDVMs-SZMd";
+            //Commented out the real database password so the connection fails
+            //and the program uses the localhost database.
             String pass = "";
             connection = DriverManager.getConnection(jdbc, user, pass);
         } catch (ClassNotFoundException | SQLException ex) {
