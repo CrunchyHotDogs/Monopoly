@@ -2,8 +2,6 @@ package credentials;
 
 
 import java.sql.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 /**
  *
  * @author Kyle
@@ -21,7 +19,6 @@ public class Credentials {
             connection = DriverManager.getConnection(jdbc, user, pass);
         } catch (ClassNotFoundException | SQLException ex) {
             FLAG = false;
-            Logger.getLogger(Credentials.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         //If the program can't get a connection to the server, try getting a connection on th localhost.
@@ -33,7 +30,7 @@ public class Credentials {
                 String pass = "";
                 connection = DriverManager.getConnection(jdbc, user, pass);
             } catch (ClassNotFoundException | SQLException ex) {
-                Logger.getLogger(Credentials.class.getName()).log(Level.SEVERE, null, ex);
+                
             }
         }
         

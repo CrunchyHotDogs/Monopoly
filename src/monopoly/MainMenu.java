@@ -150,6 +150,9 @@ public class MainMenu extends javax.swing.JFrame {
         }
     }
     
+    /**
+     * Tries to retrieve boards from the database and set one as the board being played on.
+     */
     private void setBoard() {
         DefaultListModel<BoardInfo> model = new DefaultListModel();
         
@@ -161,23 +164,22 @@ public class MainMenu extends javax.swing.JFrame {
                 BoardInfo boardInfo = new BoardInfo(rs.getString("board_name"), rs.getInt("board_id"));
                 model.addElement(boardInfo);
             }
+            
+            String popUpTitle = "Choose a Board";
+            JList mapList = new JList();
+            mapList.setModel(model);
+            mapList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+            JOptionPane.showMessageDialog(null, mapList, popUpTitle, JOptionPane.PLAIN_MESSAGE);
+            if (mapList.getSelectedValue() != null) {
+                BoardInfo bi = (BoardInfo) mapList.getSelectedValue();
+                boardId = bi.getId();
+                GameTypeList.setEnabled(false);
+            }
         } 
-        catch (SQLException ex) {
+        catch (NullPointerException | SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Sorry, there is an error with our database.", "", JOptionPane.ERROR_MESSAGE);
             System.out.println(ex.getMessage());
-        }
-        
-        
-        
-        String popUpTitle = "Choose a Board";
-        JList mapList = new JList();
-        mapList.setModel(model);
-        mapList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        
-        JOptionPane.showMessageDialog(null, mapList, popUpTitle, JOptionPane.PLAIN_MESSAGE);
-        if (mapList.getSelectedValue() != null) {
-            BoardInfo bi = (BoardInfo) mapList.getSelectedValue();
-            boardId = bi.getId();
-            GameTypeList.setEnabled(false);
         }
     }
     
